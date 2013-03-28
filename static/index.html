@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'></meta>
+	<title>WristGrab Player</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="style.css" rel="stylesheet" media="screen">
+</head>
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h1>WristGrab <small>Take a drink</small></h1>
+		</div>
+		<div class="row-fluid">
+			<div class="text-center">
+				<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+				<div id="player"></div>
+			</div>
+		</div>
+		<div class="row-fluid">
+				<div class="well">
+					<ul id="chatbox" class="unstyled">
+					</ul>
+				</div>
+				<form id="chatform" class="form-inline">
+					<input id="chatinput" class="input-block-level" type="text" placeholder="Type a chat message...">
+				</form>
+		</div>
+	</div>
+
+	<script src="http://code.jquery.com/jquery.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io.connect();
+
+		// 2. This code loads the IFrame Player API code asynchronously.
+		var tag = document.createElement('script');
+
+		tag.src = "https://www.youtube.com/iframe_api";
+		var firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+		// 3. This function creates an <iframe> (and YouTube player)
+		//    after the API code downloads.
+		var player;
+		function onYouTubeIframeAPIReady() {
+			player = new YT.Player('player', {
+				height: '522',
+				width: '928',
+				videoId: 'U7mPqycQ0tQ',
+				events: {
+					'onReady': onPlayerReady,
+					'onStateChange': onPlayerStateChange
+				}
+			});
+		}
+
+		// 4. The API will call this function when the video player is ready.
+		function onPlayerReady(event) {
+			//event.target.playVideo();
+		}
+
+		// 5. The API calls this function when the player's state changes.
+		function onPlayerStateChange(event) {
+			socket.emit('update', { 
+				status : event.data, 
+				time : player.getCurrentTime(), 
+				loaded : player.getVideoLoadedFraction() 
+			});
+		}
+
+		$('#chatform').submit(function() {
+			var input = $('#chatinput');
+			socket.emit('chat', { text: input.val() });
+			input.val('');
+			return false;
+		});
+
+		socket.on('chat', function(data) {
+			var div = $("#chatbox");
+			div.append($('<li>').append($('<strong>').text(data.name + ': ')).append($('<span>').text(data.text)));
+			div.animate({ scrollTop: div.prop("scrollHeight") - div.height() }, 1);
+		});
+
+		socket.on('pause', function(data) {
+			player.seekTo(data.timestamp, true);
+			player.pauseVideo();
+		});
+
+		socket.on('play', function(data) {
+			player.seekTo(data.timestamp, true);
+			player.playVideo();
+		});
+	</script>
+</body>
+</html>

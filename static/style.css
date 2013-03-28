@@ -1,0 +1,9 @@
+.row-fluid {
+	margin-bottom: 2em;
+}
+
+#chatbox {
+	height: 120px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
