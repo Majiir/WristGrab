@@ -34,7 +34,7 @@ exports.load = function(socket, store, key, secret, fn) {
 					}
 				});
 			} else {
-				fn(new Error('Session key signature doesn\'t match secret key.'));
+				fn(new Error("Session key signature doesn't match secret key."));
 			}
 		} else {
 			fn(null, null);
