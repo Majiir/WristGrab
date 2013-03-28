@@ -54,7 +54,7 @@ var config = {
 	},
 	session: {
 		key: 'sid',
-		maxAge: 60000,
+		maxAge: 60 * 1000,
 		secret: 'secret_key_here',
 		store: new connect.middleware.session.MemoryStore(),
 	},
