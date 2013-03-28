@@ -44,8 +44,14 @@ console.log(stateNames);
  */
 
 var config = {
-	ip: '0.0.0.0',
-	port: 1337,
+	file: {
+		cache: 30,
+		path: './static',
+	},
+	server: {
+		ip: '0.0.0.0',
+		port: 1337,
+	},
 	session: {
 		key: 'sid',
 		maxAge: 60000,
@@ -58,7 +64,7 @@ var config = {
  * Servers.
  */
 
-var file = new(require('node-static').Server)('./static', { cache: 30 });
+var file = new(require('node-static').Server)(config.file.path, { cache: config.file.cache });
 
 var server = http.createServer(connect()
 	.use(connect.cookieParser())
@@ -76,7 +82,7 @@ var server = http.createServer(connect()
 );
 
 var io = require('socket.io').listen(server);
-server.listen(config.port, config.ip);
+server.listen(config.server.port, config.server.ip);
 
 /**
  * Socket events.
@@ -122,4 +128,4 @@ io.sockets.on('connection', function (socket) {
  * Logging.
  */
 
-console.log('Server listening on ' + config.ip + ':' + config.port + '...');
+console.log('Server listening on ' + config.server.ip + ':' + config.server.port + '...');
