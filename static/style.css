@@ -19,3 +19,8 @@ body {
 #chatbutton {
 	width: 8%;
 }
+
+p.lead {
+	margin-bottom: 16px;
+	margin-top: 16px;
+}
