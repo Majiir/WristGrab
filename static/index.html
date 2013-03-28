@@ -23,7 +23,10 @@
 					</ul>
 				</div>
 				<form id="chatform" class="form-inline">
-					<input id="chatinput" class="input-block-level" type="text" placeholder="Type a chat message..." autocomplete="off">
+					<div class="input-append input-block-level" style="display: block;">
+						<input id="chatinput" class="input-block-level" type="text" placeholder="Type a chat message..." autocomplete="off">
+						<button id="chatbutton" class="btn" type="submit">Send <i class="icon-comment icon-white"></i></button>
+					</div>
 				</form>
 		</div>
 	</div>
@@ -78,6 +81,18 @@
 			input.val('');
 			return false;
 		});
+
+		var updateChatButton = function(event) {
+			if ($('#chatinput').val() == '') {
+				$('#chatbutton').attr('disabled', 'disabled');
+			} else {
+				$('#chatbutton').removeAttr('disabled');
+			}
+		};
+
+		updateChatButton();
+
+		$('#chatinput').keyup(updateChatButton).keydown(updateChatButton).change(updateChatButton);
 
 		socket.on('chat', function(data) {
 			var div = $('#chatbox');
