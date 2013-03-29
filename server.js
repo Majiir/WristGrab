@@ -90,7 +90,7 @@ server.listen(config.server.port, config.server.ip);
 
 io.sockets.on('connection', function (socket) {
 	
-	ioSession.load(socket, config.session.store, config.session.key, config.session.secret, function(err, sess) {
+	ioSession.load(socket.handshake, config.session.store, config.session.key, config.session.secret, function(err, sess) {
 		if (err) {
 			console.log(err);
 		} else {

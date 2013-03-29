@@ -9,7 +9,7 @@ var connect = require('connect')
  * Get the Session associated with this socket's handshake.
  * The callback is of form `fn(err, sess)`.
  *
- * @param {Socket} socket
+ * @param {Object} handshake
  * @param {Store} store
  * @param {String} key
  * @param {String} secret
@@ -17,9 +17,9 @@ var connect = require('connect')
  * @api public
  */
 
-exports.load = function(socket, store, key, secret, fn) {
-	if (socket.handshake.headers.cookie) {
-		var parsed = cookie.parse(socket.handshake.headers.cookie);
+exports.load = function(handshake, store, key, secret, fn) {
+	if (handshake.headers.cookie) {
+		var parsed = cookie.parse(handshake.headers.cookie);
 		if (key in parsed) {
 			var sid = connect.utils.parseSignedCookie(parsed[key], secret);
 			if (sid) {
