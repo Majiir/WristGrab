@@ -17,13 +17,13 @@ var connect = require('connect')
  * @api public
  */
 
-exports.load = function(handshake, store, key, secret, fn) {
+exports.load = function (handshake, store, key, secret, fn) {
 	if (handshake.headers.cookie) {
 		var parsed = cookie.parse(handshake.headers.cookie);
 		if (key in parsed) {
 			var sid = connect.utils.parseSignedCookie(parsed[key], secret);
 			if (sid) {
-				store.load(sid, function(err, sess) {
+				store.load(sid, function (err, sess) {
 					if (err) {
 						fn(err);
 					} else {

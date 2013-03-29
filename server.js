@@ -103,8 +103,8 @@ io.configure(function () {
  */
 
 io.sockets.on('connection', function (socket) {
-	
-	socket.on('update', function(data) {
+
+	socket.on('update', function (data) {
 		console.log(
 			'Status: ' + stateNames[data.status] + '   ' +
 			'\tTime: ' + data.time.toFixed(2) +
@@ -119,7 +119,7 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 
-	socket.on('chat', function(data) {
+	socket.on('chat', function (data) {
 		io.sockets.emit('chat', { text: data.text, name: socket.handshake.address.address });
 	});
 	
