@@ -84,24 +84,25 @@ var server = http.createServer(connect()
 var io = require('socket.io').listen(server);
 server.listen(config.server.port, config.server.ip);
 
+io.configure(function () {
+	io.set('authorization', function (handshake, callback) {
+		ioSession.load(handshake, config.session.store, config.session.key, config.session.secret, function (err, sess) {
+			if (err) { callback(err); return; }
+			if (sess) {
+				handshake.session = sess;
+				callback(null, true);
+			} else {
+				callback(new Error("Couldn't load session for socket connection."));
+			}
+		});
+	});
+});
+
 /**
  * Socket events.
  */
 
 io.sockets.on('connection', function (socket) {
-	
-	ioSession.load(socket.handshake, config.session.store, config.session.key, config.session.secret, function(err, sess) {
-		if (err) {
-			console.log(err);
-		} else {
-			if (sess) {
-				console.log('Successfully loaded session from socket connection!');
-				console.log(sess);
-			} else {
-				console.log('No session found! (not an error)');
-			}
-		}
-	});
 	
 	socket.on('update', function(data) {
 		console.log(
