@@ -109,7 +109,7 @@
 
 		function onPlayerStateChange(event) {
 			socket.emit('update', { 
-				status : event.data, 
+				status : player.getPlayerState(),
 				time : player.getCurrentTime(), 
 				videoId : player.getVideoId(),
 				loaded : player.getVideoLoadedFraction() 
