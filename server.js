@@ -124,7 +124,7 @@ io.sockets.on('connection', function (socket) {
 			'\tLoaded: ' + data.loaded.toFixed(3)
 		);
 		if (socket.handshake.address.address == '127.0.0.1') {
-			if (data.status == states.PAUSED || data.status == states.BUFFERING) {
+			if (data.status == states.PAUSED || data.status == states.BUFFERING || data.status == states.UNSTARTED || data.status == states.CUED) {
 				socket.broadcast.emit('pause', { timestamp: data.time, videoId: data.videoId });
 			} else if (data.status == states.PLAYING) {
 				socket.broadcast.emit('play', { timestamp: data.time, videoId: data.videoId });
