@@ -87,6 +87,16 @@
 
 		function onPlayerReady(event) {
 			player.getVideoId = function() { return player.j.videoData.video_id; }
+
+			socket.on('pause', function(data) {
+				player.seekTo(data.timestamp, true);
+				player.pauseVideo();
+			});
+
+			socket.on('play', function(data) {
+				player.seekTo(data.timestamp, true);
+				player.playVideo();
+			});
 		}
 
 		function onPlayerStateChange(event) {
@@ -120,16 +130,6 @@
 			var div = $('#chatbox');
 			div.append($('<li>').append($('<strong>').text(data.name + ': ')).append($('<span>').text(data.text)));
 			div.animate({ scrollTop: div.prop('scrollHeight') - div.height() }, 1);
-		});
-
-		socket.on('pause', function(data) {
-			player.seekTo(data.timestamp, true);
-			player.pauseVideo();
-		});
-
-		socket.on('play', function(data) {
-			player.seekTo(data.timestamp, true);
-			player.playVideo();
 		});
 
 		$(function(){
