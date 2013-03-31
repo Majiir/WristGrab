@@ -105,9 +105,19 @@
 				}
 				player.playVideo();
 			});
+
+			socket.on('requestUpdate', function() {
+				sendUpdate();
+			});
+
+			sendUpdate();
 		}
 
 		function onPlayerStateChange(event) {
+			sendUpdate();
+		}
+
+		function sendUpdate() {
 			socket.emit('update', { 
 				status : player.getPlayerState(),
 				time : player.getCurrentTime(), 

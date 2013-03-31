@@ -129,6 +129,14 @@ io.sockets.on('connection', function (socket) {
 			} else if (data.status == states.PLAYING) {
 				socket.broadcast.emit('play', { timestamp: data.time, videoId: data.videoId });
 			}
+		} else {
+			if (data.status == states.PLAYING || data.status == states.CUED || data.status == states.UNSTARTED) {
+				io.sockets.clients().forEach(function (sock) {
+					if (sock.handshake.address.address == '127.0.0.1') {
+						sock.emit('requestUpdate');
+					}
+				});
+			}
 		}
 	});
 
