@@ -130,7 +130,7 @@ io.sockets.on('connection', function (socket) {
 				socket.broadcast.emit('play', { timestamp: data.time, videoId: data.videoId });
 			}
 		} else {
-			if (data.status == states.PLAYING || data.status == states.CUED || data.status == states.UNSTARTED) {
+			if (data.status == states.PLAYING || data.status == states.CUED || data.status == states.UNSTARTED || data.status == states.ENDED) {
 				io.sockets.clients().forEach(function (sock) {
 					if (sock.handshake.address.address == '127.0.0.1') {
 						sock.emit('requestUpdate');
