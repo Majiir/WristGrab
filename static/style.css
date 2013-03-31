@@ -24,3 +24,20 @@ p.lead {
 	margin-bottom: 16px;
 	margin-top: 16px;
 }
+
+#login-dropdown form {
+	margin-bottom: 0;
+}
+
+#login-dropdown form button[type=submit] {
+	margin-top: 5px;
+	outline: none;
+}
+
+#login-dropdown form .text-error {
+	margin-top: 8px;
+}
+
+.logged-in {
+	display: none;
+}

@@ -16,17 +16,20 @@
 					<li><a href="#">Create Room <i class="icon-star"></i></a></li>
 				</ul>
 				<ul class="nav pull-right">
-					<li class="dropdown">
+					<li id="login-dropdown" class="dropdown logged-out">
 						<a class="dropdown-toggle" href="#" data-toggle="dropdown">Log In <i class="icon-share-alt"></i></a>
-						<div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-							<form method="post">
-								<input type="text" placeholder="Username or e-mail"></input>
-								<input type="password" placeholder="Password"></input>
-								<button type="submit" class="btn">Log in</button>
+						<div class="dropdown-menu" style="padding: 15px;">
+							<form method="post" action="/login">
+								<input type="text" name="username" placeholder="Username or e-mail"></input>
+								<input type="password" name="password" placeholder="Password"></input>
+								<button type="submit" class="btn btn-block" data-loading-text="logging in..." autocomplete="off">Log in</button>
+								<div class="text-error text-center" style="display: none;">Login failed!</div>
 							</form>
 						</div>
 					</li>
-					<li><a href="#">Register <i class="icon-edit"></i></a></li>
+					<li class="logged-out"><a href="#">Register <i class="icon-edit"></i></a></li>
+					<li class="logged-in"><a href="#">Settings <i class="icon-cog"></i></a></li>
+					<li class="logged-in"><a id="logout" href="#">Log Out <i class="icon-arrow-left"></i></a></li>
 				</ul>
 			</div>
 		</div>
@@ -58,6 +61,7 @@
 	<script src="http://code.jquery.com/jquery.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="http://malsup.github.com/jquery.form.js"></script>
 	<script>
 		var socket = io.connect();
 
@@ -132,6 +136,41 @@
 		socket.on('play', function(data) {
 			player.seekTo(data.timestamp, true);
 			player.playVideo();
+		});
+
+		$(function(){
+			var loggedIn = $('.logged-in');
+			var loggedOut = $('.logged-out');
+			var loginDropdown = $('#login-dropdown');
+			var loginForm = loginDropdown.find('form');
+			var loginButton = loginForm.find('button[type=submit]');
+			var loginError = loginForm.find('.text-error');
+
+			loginForm.submit(function() {
+				loginButton.button('loading');
+				loginError.slideUp('fast');
+				$(this).ajaxSubmit(function(res) {
+					loginButton.button('reset');
+					if (res.success) {
+						loggedOut.fadeOut(null, function() {
+							loggedIn.fadeIn();
+						});
+						loginDropdown.removeClass('open');
+					} else {
+						loginError.slideDown('fast');
+					}
+				});
+				return false;
+			});
+
+			$('#logout').click(function() {
+				$.ajax({ url: '/logout' }).done(function() {
+					loggedIn.fadeOut(null, function() {
+						loggedOut.fadeIn();
+					});
+				});
+				return false;
+			});
 		});
 	</script>
 </body>

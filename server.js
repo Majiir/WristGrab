@@ -3,7 +3,9 @@
  */
 
 var connect = require('connect')
+  , dispatch = require('dispatch')
   , http = require('http')
+  , quip = require('quip')
   , ioSession = require('./socketio-sessions.js');
 
 /**
@@ -69,6 +71,16 @@ var file = new(require('node-static').Server)(config.file.path, { cache: config.
 var server = http.createServer(connect()
 	.use(connect.cookieParser())
 	.use(connect.session({ cookie: { maxAge: config.session.maxAge }, key: config.session.key, secret: config.session.secret, store: config.session.store }))
+	.use(connect.bodyParser())
+	.use(quip())
+	.use(dispatch({
+		'POST /login': function (req, res, next) {
+			res.json({ 'success': true });
+		},
+		'GET /logout': function(req, res, next) {
+			res.status(204).send();
+		}
+	}))
 	.use(function (req, res) {
 		file.serve(req, res, function (err, result) {
 			if (err) {
