@@ -40,7 +40,6 @@
 		</div>
 		<div class="row-fluid">
 			<div class="text-center">
-				<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
 				<div id="player"></div>
 			</div>
 		</div>
@@ -65,7 +64,6 @@
 	<script>
 		var socket = io.connect();
 
-		// 2. This code loads the IFrame Player API code asynchronously.
 		var tag = document.createElement('script');
 
 		tag.src = 'https://www.youtube.com/iframe_api';
@@ -74,8 +72,6 @@
 
 		var width = $('#player').width();
 
-		// 3. This function creates an <iframe> (and YouTube player)
-		//    after the API code downloads.
 		var player;
 		function onYouTubeIframeAPIReady() {
 			player = new YT.Player('player', {
@@ -89,13 +85,10 @@
 			});
 		}
 
-		// 4. The API will call this function when the video player is ready.
 		function onPlayerReady(event) {
-			//event.target.playVideo();
 			player.getVideoId = function() { return player.j.videoData.video_id; }
 		}
 
-		// 5. The API calls this function when the player's state changes.
 		function onPlayerStateChange(event) {
 			socket.emit('update', { 
 				status : event.data, 
