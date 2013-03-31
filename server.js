@@ -120,13 +120,14 @@ io.sockets.on('connection', function (socket) {
 		console.log(
 			'Status: ' + stateNames[data.status] + '   ' +
 			'\tTime: ' + data.time.toFixed(2) +
+			'\tVideo: ' + data.videoId +
 			'\tLoaded: ' + data.loaded.toFixed(3)
 		);
 		if (socket.handshake.address.address == '127.0.0.1') {
 			if (data.status == states.PAUSED || data.status == states.BUFFERING) {
-				socket.broadcast.emit('pause', { timestamp: data.time });
+				socket.broadcast.emit('pause', { timestamp: data.time, videoId: data.videoId });
 			} else if (data.status == states.PLAYING) {
-				socket.broadcast.emit('play', { timestamp: data.time });
+				socket.broadcast.emit('play', { timestamp: data.time, videoId: data.videoId });
 			}
 		}
 	});

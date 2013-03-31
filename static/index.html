@@ -89,11 +89,17 @@
 			player.getVideoId = function() { return player.j.videoData.video_id; }
 
 			socket.on('pause', function(data) {
+				if (data.videoId !== player.getVideoId()) {
+					player.loadVideoById(data.videoId, data.timestamp);
+				}
 				player.seekTo(data.timestamp, true);
 				player.pauseVideo();
 			});
 
 			socket.on('play', function(data) {
+				if (data.videoId !== player.getVideoId()) {
+					player.loadVideoById(data.videoId, data.timestamp);
+				}
 				if (canSeekTo(data.timestamp)) {
 					player.seekTo(data.timestamp, true);
 				}
@@ -105,6 +111,7 @@
 			socket.emit('update', { 
 				status : event.data, 
 				time : player.getCurrentTime(), 
+				videoId : player.getVideoId(),
 				loaded : player.getVideoLoadedFraction() 
 			});
 		}
