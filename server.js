@@ -96,12 +96,18 @@ var server = http.createServer(connect()
 var io = require('socket.io').listen(server);
 server.listen(config.server.port, config.server.ip);
 
+function getConnectedSession(sess) {
+	var socket = io.sockets.clients().filter(function (sock) { return sock.handshake.session.id == sess.id; }).shift();
+	if (!socket) { return null; }
+	return socket.handshake.session;
+}
+
 io.configure(function () {
 	io.set('authorization', function (handshake, callback) {
 		ioSession.load(handshake, config.session.store, config.session.key, config.session.secret, function (err, sess) {
 			if (err) { callback(err); return; }
 			if (sess) {
-				handshake.session = sess;
+				handshake.session = getConnectedSession(sess) || sess;
 				callback(null, true);
 			} else {
 				callback(new Error("Couldn't load session for socket connection."));
