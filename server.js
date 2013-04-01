@@ -126,7 +126,16 @@ io.configure(function () {
  * Socket events.
  */
 
+function updateList(disconnecting) {
+	var list = io.sockets.clients()
+		.filter(function (socket) { return socket !== disconnecting; })
+		.map(function (socket) { return socket.handshake.session.nickname; });
+	io.sockets.emit('list', list);
+}
+
 io.sockets.on('connection', function (socket) {
+
+	updateList();
 
 	socket.on('update', function (data) {
 		console.log(
@@ -159,6 +168,11 @@ io.sockets.on('connection', function (socket) {
 	socket.on('nickname', function (nickname) {
 		socket.handshake.session.nickname = nickname;
 		socket.handshake.session.save();
+		updateList();
+	});
+
+	socket.on('disconnect', function() {
+		updateList(socket);
 	});
 
 });
