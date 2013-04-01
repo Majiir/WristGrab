@@ -42,6 +42,9 @@
 			<div class="text-center">
 				<div id="player"></div>
 			</div>
+			<div>
+				<button id="nickname" type="button" class="btn">Change Nickname</button>
+			</div>
 		</div>
 		<div class="row-fluid">
 				<div class="well">
@@ -187,6 +190,13 @@
 					});
 				});
 				return false;
+			});
+
+			$('#nickname').click(function() {
+				var result = prompt('Enter a new nickname:');
+				if (result) {
+					socket.emit('nickname', result);
+				}
 			});
 		});
 	</script>

@@ -71,6 +71,12 @@ var file = new(require('node-static').Server)(config.file.path, { cache: config.
 var server = http.createServer(connect()
 	.use(connect.cookieParser())
 	.use(connect.session({ cookie: { maxAge: config.session.maxAge }, key: config.session.key, secret: config.session.secret, store: config.session.store }))
+	.use(function (req, res, next) {
+		if (!req.session.nickname) {
+			req.session.nickname = 'Guest';
+		}
+		next();
+	})
 	.use(connect.bodyParser())
 	.use(quip())
 	.use(dispatch({
@@ -147,9 +153,14 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('chat', function (data) {
-		io.sockets.emit('chat', { text: data.text, name: socket.handshake.address.address });
+		io.sockets.emit('chat', { text: data.text, name: socket.handshake.session.nickname });
 	});
-	
+
+	socket.on('nickname', function (nickname) {
+		socket.handshake.session.nickname = nickname;
+		socket.handshake.session.save();
+	});
+
 });
 
 /**
