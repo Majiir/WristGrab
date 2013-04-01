@@ -43,6 +43,7 @@
 				<div id="player"></div>
 			</div>
 			<div>
+				<button id="change" type="button" class="btn">Change Video</button>
 				<button id="nickname" type="button" class="btn">Change Nickname</button>
 			</div>
 		</div>
@@ -206,6 +207,13 @@
 					});
 				});
 				return false;
+			});
+
+			$('#change').click(function() {
+				var result = prompt('Enter a YouTube video ID:');
+				if (result) {
+					player.loadVideoById(result);
+				}
 			});
 
 			$('#nickname').click(function() {
