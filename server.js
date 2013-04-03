@@ -83,6 +83,9 @@ var server = http.createServer(connect()
 		'POST /login': function (req, res, next) {
 			res.json({ 'success': true });
 		},
+		'POST /register': function (req, res, next) {
+			res.json({ 'success': true });
+		},
 		'GET /logout': function(req, res, next) {
 			res.status(204).send();
 		}

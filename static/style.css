@@ -25,6 +25,25 @@ p.lead {
 	margin-top: 16px;
 }
 
+#register {
+	background-color: #131517
+}
+
+#register form,
+#register .form-actions {
+	margin-bottom: 0;
+}
+
+#register .modal-body {
+	padding-left: 0;
+	padding-right: 0;
+	padding-bottom: 0;
+}
+
+.btn-primary.disabled, .btn-primary[disabled] {
+	background-color: #008AB8;
+}
+
 #login-dropdown form {
 	margin-bottom: 0;
 }

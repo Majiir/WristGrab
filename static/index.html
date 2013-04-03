@@ -27,13 +27,46 @@
 							</form>
 						</div>
 					</li>
-					<li class="logged-out"><a href="#">Register <i class="icon-edit"></i></a></li>
+					<li class="logged-out"><a href="#register" role="button" data-toggle="modal">Register <i class="icon-edit"></i></a></li>
 					<li class="logged-in"><a href="#">Settings <i class="icon-cog"></i></a></li>
 					<li class="logged-in"><a id="logout" href="#">Log Out <i class="icon-arrow-left"></i></a></li>
 				</ul>
 			</div>
 		</div>
 	</div>
+
+	<div id="register" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="registerLabel" aria-hidden="true">
+		<div class="modal-header">
+			<h3 id="registerLabel">Register</h3>
+		</div>
+		<div class="modal-body">
+			<form class="form-horizontal" method="post" action="/register">
+				<div class="control-group">
+					<label class="control-label" for="inputUsername">Username</label>
+					<div class="controls">
+						<input type="text" id="inputUsername" placeholder="Username">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputEmail">Email</label>
+					<div class="controls">
+						<input type="text" id="inputEmail" placeholder="Email">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputPassword">Password</label>
+					<div class="controls">
+						<input type="password" id="inputPassword" placeholder="Password">
+					</div>
+				</div>
+				<div class="form-actions">
+					<button class="btn btn-primary" type="submit" data-loading-text="registering..." autocomplete="off">Register</button>
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
 	<div class="container">
 		<div class="jumbotron text-center">
 			<p class="lead">Watch videos together, no matter where you are. Add something to the playlist to get started.</p>
@@ -195,6 +228,24 @@
 						loginDropdown.removeClass('open');
 					} else {
 						loginError.slideDown('fast');
+					}
+				});
+				return false;
+			});
+
+			var register = $('#register');
+			var registerForm = register.find('form');
+			var registerButton = register.find('button[type=submit]');
+
+			registerForm.submit(function() {
+				registerButton.button('loading');
+				$(this).ajaxSubmit(function(res) {
+					registerButton.button('reset');
+					if (res.success) {
+						register.modal('hide');
+						loggedOut.fadeOut(null, function() {
+							loggedIn.fadeIn();
+						});
 					}
 				});
 				return false;
