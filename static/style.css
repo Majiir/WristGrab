@@ -29,9 +29,12 @@ p.lead {
 	margin-bottom: 0;
 }
 
+.btn:focus {
+	outline: none;
+}
+
 #login-dropdown form button[type=submit] {
 	margin-top: 5px;
-	outline: none;
 }
 
 #login-dropdown form .text-error {
