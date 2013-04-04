@@ -15,7 +15,7 @@
 					<li><a href="#">Browse Rooms <i class="icon-th-large"></i></a></li>
 					<li><a href="#">Create Room <i class="icon-star"></i></a></li>
 				</ul>
-				<ul class="nav pull-right">
+				<ul class="nav pull-right noscript-hide">
 					<li id="login-dropdown" class="dropdown logged-out">
 						<a class="dropdown-toggle" href="#" data-toggle="dropdown">Log In <i class="icon-share-alt"></i></a>
 						<div class="dropdown-menu" style="padding: 15px;">
@@ -67,7 +67,16 @@
 		</div>
 	</div>
 
-	<div class="container">
+	<noscript>
+		<div class="container">
+			<div class="hero-unit">
+				<h2>Javascript is required for this site.</h2>
+				<p>It looks like your browser doesn't support Javascript, or it's been disabled. This site requires Javascript in order to synchronize video playback. <a href="http://activatejavascript.org/">Enable Javascript</a> or <a href="http://browsehappy.com/">upgrade your web browser</a> and come back to enjoy simultaneous viewing!</p>
+			</div>
+		</div>
+	</noscript>
+
+	<div class="container noscript-hide">
 		<div class="jumbotron text-center">
 			<p class="lead">Watch videos together, no matter where you are. Add something to the playlist to get started.</p>
 		</div>
@@ -107,6 +116,8 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="http://malsup.github.com/jquery.form.js"></script>
 	<script>
+		$('.noscript-hide').removeClass('noscript-hide');
+
 		var socket = io.connect();
 
 		var tag = document.createElement('script');
