@@ -4,38 +4,38 @@
 @import "utilities.less";
 
 body {
-	margin-top: 51px;
+	margin-top: @navbarHeight + 1px;
 }
 
 .row-fluid {
-	margin-bottom: 2em;
+	margin-bottom: @baseLineHeight;
 }
 
 #chatbox {
-	height: 120px;
+	height: @baseLineHeight * 6;
 	overflow-x: hidden;
 	overflow-y: scroll;
 }
 
 #chatinput {
-	width: 90%;
+	width: (@gridColumnWidth * 8) + (@gridGutterWidth * 7) - 75px;
 }
 
 #chatbutton {
-	width: 10%;
+	width: 75px;
 }
 
 p.lead {
-	margin-bottom: 16px;
-	margin-top: 16px;
+	margin-bottom: @baseLineHeight * 0.8;
+	margin-top: @baseLineHeight * 0.8;
 }
 
 .hero-unit {
-	margin-top: 16px;
+	margin-top: @baseLineHeight * 0.8;
 }
 
 #register {
-	background-color: #131517
+	background-color: @wellBackground;
 }
 
 #register form,
@@ -50,7 +50,7 @@ p.lead {
 }
 
 .btn-primary.disabled, .btn-primary[disabled] {
-	background-color: #008AB8;
+	background-color: @blueDark;
 }
 
 #login-dropdown form {
@@ -62,11 +62,11 @@ p.lead {
 }
 
 #login-dropdown form button[type=submit] {
-	margin-top: 5px;
+	margin-top: @baseLineHeight * 0.25;
 }
 
 #login-dropdown form .text-error {
-	margin-top: 8px;
+	margin-top: @baseLineHeight * 0.5;
 }
 
 .noscript-hide * {
