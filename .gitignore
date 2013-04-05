@@ -1,3 +1,9 @@
+# compiled stylesheets
+
+static/style.css
+
+# node.js
+
 lib-cov
 *.seed
 *.log

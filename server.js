@@ -5,6 +5,7 @@
 var connect = require('connect')
   , dispatch = require('dispatch')
   , http = require('http')
+  , lessMiddleware = require('less-middleware')
   , quip = require('quip')
   , ioSession = require('./socketio-sessions.js');
 
@@ -89,6 +90,14 @@ var server = http.createServer(connect()
 		'GET /logout': function(req, res, next) {
 			res.status(204).send();
 		}
+	}))
+	.use(lessMiddleware({
+		paths: [
+			'./node_modules/bootstrap/less',
+			'./node_modules/bootswatch',
+		],
+		dest: './static',
+		src: './less',
 	}))
 	.use(function (req, res) {
 		file.serve(req, res, function (err, result) {
