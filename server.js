@@ -112,7 +112,6 @@ var server = http.createServer(connect()
 );
 
 var io = require('socket.io').listen(server);
-server.listen(config.server.port, config.server.ip);
 
 function getConnectedSession(sess) {
 	var socket = io.sockets.clients().filter(function (sock) { return sock.handshake.session.id == sess.id; }).shift();
@@ -190,7 +189,8 @@ io.sockets.on('connection', function (socket) {
 });
 
 /**
- * Logging.
+ * Listening.
  */
 
+server.listen(config.server.port, config.server.ip);
 console.log('Server listening on ' + config.server.ip + ':' + config.server.port + '...');
