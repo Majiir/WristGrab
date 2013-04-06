@@ -113,6 +113,10 @@ var server = http.createServer(connect()
 
 var io = require('socket.io').listen(server);
 
+/**
+ * Socket authorization.
+ */
+
 function getConnectedSession(sess) {
 	var socket = io.sockets.clients().filter(function (sock) { return sock.handshake.session.id == sess.id; }).shift();
 	if (!socket) { return null; }
