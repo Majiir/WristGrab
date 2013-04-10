@@ -64,6 +64,25 @@ var config = {
 };
 
 /**
+ * Form validation.
+ */
+
+var form = require('form');
+
+var registerForm = form.create({
+	username: [
+		form.validator(form.Validator.len, 4, 32, 'Username must be 4-32 characters.'),
+		form.validator(form.Validator.is, /^([A-Za-z0-9]+ ?)*[A-Za-z0-9]+$/, 'Username may only contain A-Z, a-z, 0-9 and spaces.'),
+	],
+	password: [
+		form.validator(form.Validator.len, 6, 32, 'Password must be 6-64 characters.'),
+	],
+	email: [
+		form.validator(form.Validator.isEmail, 'Please enter a valid e-mail address.'),
+	],
+});
+
+/**
  * Servers.
  */
 
@@ -85,7 +104,14 @@ var server = http.createServer(connect()
 			res.json({ 'success': true });
 		},
 		'POST /register': function (req, res, next) {
-			res.json({ 'success': true });
+			registerForm.process(req.body, function(err, data) {
+				if (err) {
+					err.success = false;
+					res.json(err);
+					return;
+				}
+				res.json({ success: true });
+			});
 		},
 		'GET /logout': function(req, res, next) {
 			res.status(204).send();
