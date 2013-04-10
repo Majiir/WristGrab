@@ -248,6 +248,7 @@
 				$(this).ajaxSubmit(function(res) {
 					loginButton.button('reset');
 					if (res.success) {
+						loginForm.trigger('reset');
 						loggedOut.fadeOut(null, function() {
 							loggedIn.fadeIn();
 						});
@@ -271,6 +272,7 @@
 				$(this).ajaxSubmit(function(res) {
 					registerButton.button('reset');
 					if (res.success) {
+						registerForm.trigger('reset');
 						register.modal('hide');
 						loggedOut.fadeOut(null, function() {
 							loggedIn.fadeIn();
