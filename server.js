@@ -177,17 +177,17 @@ io.sockets.on('connection', function (socket) {
 
 	updateList();
 
-	socket.on('update', function (data) {
+	socket.on('update', function (status, time, videoId, loaded) {
 		console.log(
-			'Status: ' + stateNames[data.status] + '   ' +
-			'\tTime: ' + data.time.toFixed(2) +
-			'\tVideo: ' + data.videoId +
-			'\tLoaded: ' + data.loaded.toFixed(3)
+			'Status: ' + stateNames[status] + '   ' +
+			'\tTime: ' + time.toFixed(2) +
+			'\tVideo: ' + videoId +
+			'\tLoaded: ' + loaded.toFixed(3)
 		);
 		if (socket.handshake.address.address == '127.0.0.1') {
-			socket.broadcast.emit(data.status == states.PLAYING ? 'play' : 'pause', { timestamp: data.time, videoId: data.videoId });
+			socket.broadcast.emit(status == states.PLAYING ? 'play' : 'pause', { timestamp: time, videoId: videoId });
 		} else {
-			if (data.status == states.PLAYING || data.status == states.CUED || data.status == states.UNSTARTED || data.status == states.ENDED) {
+			if (status == states.PLAYING || status == states.CUED || status == states.UNSTARTED || status == states.ENDED) {
 				io.sockets.clients().forEach(function (sock) {
 					if (sock.handshake.address.address == '127.0.0.1') {
 						sock.emit('requestUpdate');
@@ -197,8 +197,8 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 
-	socket.on('chat', function (data) {
-		io.sockets.emit('chat', { text: data.text, name: socket.handshake.session.nickname });
+	socket.on('chat', function (text) {
+		io.sockets.emit('chat', { text: text, name: socket.handshake.session.nickname });
 	});
 
 	socket.on('nickname', function (nickname) {

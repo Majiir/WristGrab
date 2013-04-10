@@ -175,12 +175,12 @@
 		}
 
 		function sendUpdate() {
-			socket.emit('update', { 
-				status : player.getPlayerState(),
-				time : player.getCurrentTime(), 
-				videoId : player.getVideoId(),
-				loaded : player.getVideoLoadedFraction() 
-			});
+			socket.emit('update',
+				player.getPlayerState(),
+				player.getCurrentTime(),
+				player.getVideoId(),
+				player.getVideoLoadedFraction()
+			);
 		}
 
 		function canSeekTo(timestamp) {
@@ -189,7 +189,7 @@
 
 		$('#chatform').submit(function() {
 			var input = $('#chatinput');
-			socket.emit('chat', { text: input.val() });
+			socket.emit('chat', input.val());
 			input.val('');
 			return false;
 		});
