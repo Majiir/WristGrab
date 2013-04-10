@@ -106,7 +106,6 @@ var server = http.createServer(connect()
 		'POST /register': function (req, res, next) {
 			registerForm.process(req.body, function(err, data) {
 				if (err) {
-					err.success = false;
 					res.json(err);
 					return;
 				}
