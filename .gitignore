@@ -2,6 +2,10 @@
 
 static/style.css
 
+# database
+
+data
+
 # node.js
 
 lib-cov

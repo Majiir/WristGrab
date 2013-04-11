@@ -7,6 +7,7 @@
   "dependencies": {
     "bootstrap": "git+https://github.com/twitter/bootstrap.git#v2.3.1",
     "bootswatch": "git+https://github.com/thomaspark/bootswatch.git#v2.3.1",
+    "chaos": "0.2.x",
     "connect": "2.7.x",
     "cookie": "0.0.x",
     "dispatch": "0.2.x",

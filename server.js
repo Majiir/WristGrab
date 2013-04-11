@@ -3,6 +3,7 @@
  */
 
 var connect = require('connect')
+  , crypto = require('crypto')
   , dispatch = require('dispatch')
   , http = require('http')
   , lessMiddleware = require('less-middleware')
@@ -41,6 +42,12 @@ var states = {
 var stateNames = invert(states);
 
 console.log(stateNames);
+
+/**
+ * Database.
+ */
+
+var db = require('chaos')('./data');
 
 /**
  * Configuration.
@@ -101,7 +108,10 @@ var server = http.createServer(connect()
 	.use(quip())
 	.use(dispatch({
 		'POST /login': function (req, res, next) {
-			res.json({ 'success': true });
+			db.get('user:' + (req.body.username || '').toLowerCase(), function (err, user) {
+				var hash = crypto.createHash('sha1').update(req.body.password).digest('binary');
+				res.json({ success: user && user.hash === hash });
+			});
 		},
 		'POST /register': function (req, res, next) {
 			registerForm.process(req.body, function(err, data) {
@@ -109,7 +119,19 @@ var server = http.createServer(connect()
 					res.json(err);
 					return;
 				}
-				res.json({ success: true });
+				db.get('user:' + data.username.toLowerCase(), function (err, val) {
+					if (val) { res.json({ username: 'Username is already in use.' }); return; }
+
+					var user = {
+						username: data.username,
+						hash: crypto.createHash('sha1').update(data.password).digest('binary'),
+						email: data.email,
+					};
+
+					db.set('user:' + data.username.toLowerCase(), user, function (err) {
+						res.json({ success: true });
+					});
+				});
 			});
 		},
 		'GET /logout': function(req, res, next) {
