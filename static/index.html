@@ -290,6 +290,11 @@
 				return false;
 			});
 
+			register.on('hidden', function() {
+				registerForm.trigger('reset');
+				registerForm.find('.error').remove();
+			});
+
 			$('#logout').click(function() {
 				$.ajax({ url: '/logout' }).done(function() {
 					loggedIn.fadeOut(null, function() {
