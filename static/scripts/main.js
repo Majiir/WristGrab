@@ -1,4 +1,22 @@
-(function () {
+require.config({
+	shim: {
+		'bootstrap': {
+			deps: ['jquery'],
+		},
+		'jquery.form': {
+			deps: ['jquery'],
+		},
+		'socketio': {
+			exports: 'io',
+		},
+	},
+	paths: {
+		'bootstrap': '../js/bootstrap.min',
+		'socketio': '../socket.io/socket.io',
+	},
+});
+
+require(['jquery', 'socketio', 'bootstrap', 'jquery.form'], function ($, io) {
 	$('.noscript-hide').removeClass('noscript-hide');
 
 	var socket = io.connect();
@@ -200,4 +218,4 @@
 			}
 		});
 	});
-})();
+});
