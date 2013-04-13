@@ -16,10 +16,8 @@ require.config({
 	},
 });
 
-require(['jquery', 'socketio', 'bootstrap', 'jquery.form'], function ($, io) {
+require(['jquery', 'socket', 'bootstrap', 'jquery.form'], function ($, socket) {
 	$('.noscript-hide').removeClass('noscript-hide');
-
-	var socket = io.connect();
 
 	var tag = document.createElement('script');
 
@@ -120,17 +118,7 @@ require(['jquery', 'socketio', 'bootstrap', 'jquery.form'], function ($, io) {
 		});
 	});
 
-	socket.on('disconnect', function() {
-		$('#disconnected').slideDown();
-	});
-
 	socket.on('reconnect', function() {
-		$('#disconnected').fadeOut('fast', function() {
-			$('#reconnected').fadeIn('fast');
-			setTimeout(function() {
-				$('#reconnected').slideUp('slow');
-			}, 1000);
-		});
 		sendUpdate();
 	});
 
