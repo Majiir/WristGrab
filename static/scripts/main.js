@@ -1,3 +1,4 @@
+(function () {
 	$('.noscript-hide').removeClass('noscript-hide');
 
 	var socket = io.connect();
@@ -11,7 +12,7 @@
 	var width = $('#player').width();
 
 	var player;
-	function onYouTubeIframeAPIReady() {
+	window.onYouTubeIframeAPIReady = function () {
 		player = new YT.Player('player', {
 			height: width * (9 / 16),
 			width: width,
@@ -21,7 +22,7 @@
 				'onStateChange': onPlayerStateChange
 			}
 		});
-	}
+	};
 
 	function onPlayerReady(event) {
 		player.getVideoId = function() { return player.j.videoData.video_id; }
@@ -199,3 +200,4 @@
 			}
 		});
 	});
+})();
