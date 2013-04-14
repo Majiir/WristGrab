@@ -8,6 +8,18 @@ define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 		var loginButton = loginForm.find('button[type=submit]');
 		var loginError = loginForm.find('.text-error');
 
+		function setLoggedIn() {
+			loggedOut.fadeOut(null, function() {
+				loggedIn.fadeIn();
+			});
+		}
+
+		function setLoggedOut() {
+			loggedIn.fadeOut(null, function() {
+				loggedOut.fadeIn();
+			});
+		}
+
 		loginForm.submit(function() {
 			loginButton.button('loading');
 			loginError.slideUp('fast');
@@ -15,9 +27,7 @@ define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 				loginButton.button('reset');
 				if (res.success) {
 					loginForm.trigger('reset');
-					loggedOut.fadeOut(null, function() {
-						loggedIn.fadeIn();
-					});
+					setLoggedIn();
 					loginDropdown.removeClass('open');
 				} else {
 					loginError.slideDown('fast');
@@ -40,9 +50,7 @@ define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 				if (res.success) {
 					registerForm.trigger('reset');
 					register.modal('hide');
-					loggedOut.fadeOut(null, function() {
-						loggedIn.fadeIn();
-					});
+					setLoggedIn();
 				} else {
 					registerForm.find('input').after(function() {
 						var error = res[$(this).attr('name')];
@@ -63,9 +71,7 @@ define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 
 		$('#logout').click(function() {
 			$.ajax({ url: '/logout' }).done(function() {
-				loggedIn.fadeOut(null, function() {
-					loggedOut.fadeIn();
-				});
+				setLoggedOut();
 			});
 			return false;
 		});
