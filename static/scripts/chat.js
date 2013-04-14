@@ -4,6 +4,7 @@ define(['jquery', 'socket'], function ($, socket) {
 		var input = $('#chatinput');
 		socket.emit('chat', input.val());
 		input.val('');
+		updateChatButton();
 		return false;
 	});
 
