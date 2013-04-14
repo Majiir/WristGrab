@@ -6,13 +6,9 @@ define(['jquery', 'socket'], function ($, socket) {
 	var firstScriptTag = document.getElementsByTagName('script')[0];
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-	var width = $('#player').width();
-
 	var player;
 	window.onYouTubeIframeAPIReady = function () {
 		player = new YT.Player('player', {
-			height: width * (9 / 16),
-			width: width,
 			videoId: 'U7mPqycQ0tQ',
 			events: {
 				'onReady': onPlayerReady,
