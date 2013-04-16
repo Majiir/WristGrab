@@ -183,10 +183,8 @@
 
 			if (event.data == YT.PlayerState.ENDED) {
 				var current = $('#playlist tr.playing');
-				current.removeClass('playing');
 				var next = current.is(':last-child') ? $('#playlist tr:first') : current.next();
-				next.addClass('playing');
-				player.loadVideoById(next.attr('data-id'));
+				playEntry(next);
 			}
 		}
 
@@ -201,6 +199,12 @@
 
 		function canSeekTo(timestamp) {
 			return Math.abs(player.getCurrentTime() - timestamp) >= 1;
+		}
+
+		function playEntry(next) {
+			$('#playlist tr.playing').removeClass('playing');
+			next.addClass('playing');
+			player.loadVideoById(next.attr('data-id'));
 		}
 
 		function updatePlayList() {
@@ -351,9 +355,7 @@
 			});
 
 			$('#playlist').on('click', 'tr', function () {
-				$('#playlist tr.playing').removeClass('playing');
-				$(this).addClass('playing');
-				player.loadVideoById($(this).attr('data-id'));
+				playEntry($(this));
 			});
 
 		});
