@@ -166,7 +166,7 @@ var io = require('socket.io').listen(server);
 
 function getConnectedSession(sess) {
 	var socket = io.sockets.clients().filter(function (sock) { return sock.handshake.session.id == sess.id; }).shift();
-	if (!socket) { return null; }
+	if (!socket) { return sess; }
 	return socket.handshake.session;
 }
 
@@ -175,7 +175,7 @@ io.configure(function () {
 		ioSession.load(handshake, config.session.store, config.session.key, config.session.secret, function (err, sess) {
 			if (err) { callback(err); return; }
 			if (sess) {
-				handshake.session = getConnectedSession(sess) || sess;
+				handshake.session = getConnectedSession(sess);
 				callback(null, true);
 			} else {
 				callback(new Error("Couldn't load session for socket connection."));
