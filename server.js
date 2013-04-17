@@ -172,12 +172,12 @@ function getConnectedSession(sess) {
 
 io.configure(function () {
 	io.set('authorization', ioSession(connect.cookieParser(config.session.secret), config.session.store, config.session.key, function (handshake, callback) {
-			if (handshake.session) {
-				handshake.session = getConnectedSession(handshake.session);
-				callback(null, true);
-			} else {
-				callback(new Error("Couldn't load session for socket connection."));
-			}
+		if (handshake.session) {
+			handshake.session = getConnectedSession(handshake.session);
+			callback(null, true);
+		} else {
+			callback(new Error("Couldn't load session for socket connection."));
+		}
 	}));
 });
 
