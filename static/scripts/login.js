@@ -1,5 +1,17 @@
 define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 
+	function setLoggedIn() {
+		$('.logged-out').fadeOut(null, function() {
+			$('.logged-in').fadeIn();
+		});
+	}
+
+	function setLoggedOut() {
+		$('.logged-in').fadeOut(null, function() {
+			$('.logged-out').fadeIn();
+		});
+	}
+
 	$(function(){
 		var loggedIn = $('.logged-in');
 		var loggedOut = $('.logged-out');
@@ -7,18 +19,6 @@ define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 		var loginForm = loginDropdown.find('form');
 		var loginButton = loginForm.find('button[type=submit]');
 		var loginError = loginForm.find('.text-error');
-
-		function setLoggedIn() {
-			loggedOut.fadeOut(null, function() {
-				loggedIn.fadeIn();
-			});
-		}
-
-		function setLoggedOut() {
-			loggedIn.fadeOut(null, function() {
-				loggedOut.fadeIn();
-			});
-		}
 
 		loginForm.submit(function() {
 			loginButton.button('loading');
