@@ -96,6 +96,7 @@
 				</div>
 				<div id="playlistControls">
 					    <button id="add" class="btn btn-mini"><i class="icon-plus"></i></button>
+					    <button id="clear" class="btn btn-mini"><i class="icon-fire"></i></button>
 				</div>
 			</div>
 		</div>
@@ -366,6 +367,16 @@
 			$('#add').tooltip({
 				placement: 'bottom',
 				title : 'Add Video'
+			});
+
+			$('#clear').click(function() {
+				$('#playlist tbody').empty();
+				updatePlayList();
+			});
+
+			$('#clear').tooltip({
+				placement: 'bottom',
+				title : 'Clear Playlist'
 			});
 
 		});
