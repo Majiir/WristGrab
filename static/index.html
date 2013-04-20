@@ -95,7 +95,7 @@
 					</table>
 				</div>
 				<div id="playlistControls">
-					    <a class="btn btn-mini" id="add"><i class="icon-plus"></i></a>
+					    <a class="btn btn-mini" id="add" data-title="Add Video"><i class="icon-plus"></i></a>
 				</div>
 			</div>
 		</div>
@@ -361,6 +361,11 @@
 
 			$('#playlist').on('click', 'tr', function () {
 				playEntry($(this));
+			});
+
+			$('#add').tooltip({
+				placement: 'bottom',
+				title : 'Add Video'
 			});
 
 		});
