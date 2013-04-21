@@ -223,6 +223,7 @@
 		function updatePlayList() {
 			var list = $('#playlist tr').map(function() { return $(this).attr('data-id'); }).get();
 			socket.emit('updatePlayList', list, $('#playlist tr.playing').index());
+			updateCount();
 		}
 
 		function addToPlayList(id){
@@ -233,8 +234,19 @@
 				success: function (data) {
 					$('#playlist tr[data-id='+id+'] td:nth-child(1)').text(data.entry.title.$t);
 					$('#playlist tr[data-id='+id+'] td:nth-child(2)').text(data.entry.media$group.yt$duration.seconds);
+					updateCount();
 				}
 			});
+		}
+
+		function updateCount(){
+			var rowCount = $('#playlist tr').length;
+			var time = 0;
+
+			$('#playlist td:nth-child(2)').each(function() {
+				time += parseInt($(this).html());
+			});
+			$('#count').text("Videos:" +rowCount + " Time:" +time);
 		}
 
 		$(document).ready(function() {
@@ -294,6 +306,7 @@
 		socket.on('refreshPlayList', function(list, index) {
 			$('#playlist tbody').empty();
 			list.forEach(function(item) { addToPlayList(item); });
+			updateCount();
 			if (index < 0) { return; }
 			$('#playlist tr').eq(index).addClass('playing');
 		});
