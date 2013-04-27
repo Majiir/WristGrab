@@ -47,6 +47,9 @@ define(['jquery', 'socket'], function ($, socket) {
 
 	function onPlayerStateChange(event) {
 		sendUpdate();
+		onStateChangeHandlers.forEach(function (fn) {
+			fn(event);
+		});
 	}
 
 	function sendUpdate() {
@@ -74,5 +77,17 @@ define(['jquery', 'socket'], function ($, socket) {
 			}
 		});
 	});
+
+	onStateChangeHandlers = [];
+
+	return {
+		onStateChange: function (fn) {
+			onStateChangeHandlers.push(fn);
+		},
+
+		getPlayer: function () {
+			return player;
+		},
+	};
 
 });
