@@ -99,8 +99,8 @@ var server = http.createServer(connect()
 	.use(connect.cookieParser())
 	.use(connect.session({ cookie: { maxAge: config.session.maxAge }, key: config.session.key, secret: config.session.secret, store: config.session.store }))
 	.use(function (req, res, next) {
-		if (!req.session.nickname) {
-			req.session.nickname = 'Guest';
+		if (req.session) {
+			req.session = getConnectedSession(req.session);
 		}
 		next();
 	})
@@ -110,7 +110,11 @@ var server = http.createServer(connect()
 		'POST /login': function (req, res, next) {
 			db.get('user:' + (req.body.username || '').toLowerCase(), function (err, user) {
 				var hash = crypto.createHash('sha1').update(req.body.password).digest('binary');
-				res.json({ success: user && user.hash === hash });
+				var success = user && user.hash === hash;
+				res.json({ success: success });
+				if (success) {
+					updateSessionUser(req.session, user);
+				}
 			});
 		},
 		'POST /register': function (req, res, next) {
@@ -131,11 +135,15 @@ var server = http.createServer(connect()
 					db.set('user:' + data.username.toLowerCase(), user, function (err) {
 						res.json({ success: true });
 					});
+
+					updateSessionUser(req.session, user);
 				});
 			});
 		},
 		'GET /logout': function(req, res, next) {
-			res.status(204).send();
+			updateSessionUser(req.session, null, function() {
+				res.status(204).send();
+			});
 		}
 	}))
 	.use(lessMiddleware({
@@ -159,6 +167,17 @@ var server = http.createServer(connect()
 );
 
 var io = require('socket.io').listen(server);
+
+/**
+ * User utility methods.
+ */
+
+function updateSessionUser (session, user, callback) {
+	session.user = user;
+	session.save(callback);
+	sendSessionUser(session);
+	updateList();
+}
 
 /**
  * Socket authorization.
@@ -185,16 +204,33 @@ io.configure(function () {
  * Socket events.
  */
 
+function getSocketNickname(socket) {
+	var user = socket.handshake.session.user;
+	return user ? user.username : 'Guest';
+}
+
 function updateList(disconnecting) {
 	var list = io.sockets.clients()
 		.filter(function (socket) { return socket !== disconnecting; })
-		.map(function (socket) { return socket.handshake.session.nickname; });
+		.map(getSocketNickname);
 	io.sockets.emit('list', list);
+}
+
+function sendSessionUser(session) {
+	io.sockets.clients()
+		.filter(function (socket) { return socket.handshake.session === session; })
+		.forEach(sendSocketUser);
+}
+
+function sendSocketUser(socket) {
+	var user = socket.handshake.session.user;
+	socket.emit('user', user ? user.username : null);
 }
 
 io.sockets.on('connection', function (socket) {
 
 	updateList();
+	sendSocketUser(socket);
 
 	io.sockets.clients().forEach(function (sock) {
 		if (sock.handshake.address.address == '127.0.0.1') {
@@ -223,13 +259,7 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('chat', function (text) {
-		io.sockets.emit('chat', { text: text, name: socket.handshake.session.nickname });
-	});
-
-	socket.on('nickname', function (nickname) {
-		socket.handshake.session.nickname = nickname;
-		socket.handshake.session.save();
-		updateList();
+		io.sockets.emit('chat', { text: text, name: getSocketNickname(socket) });
 	});
 
 	socket.on('disconnect', function() {
