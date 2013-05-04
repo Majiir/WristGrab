@@ -1,4 +1,26 @@
-define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
+define(['jquery', 'socket', 'bootstrap', 'jquery.form'], function ($, socket) {
+
+	function setLoggedIn() {
+		$('.logged-out').fadeOut(null, function() {
+			$('.logged-in').fadeIn();
+		});
+	}
+
+	function setLoggedOut() {
+		$('.logged-in').fadeOut(null, function() {
+			$('.logged-out').fadeIn();
+		});
+	}
+
+	socket.on('user', function (user) {
+		$(function(){
+			if (user) {
+				setLoggedIn();
+			} else {
+				setLoggedOut();
+			}
+		});
+	});
 
 	$(function(){
 		var loggedIn = $('.logged-in');
@@ -8,18 +30,6 @@ define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 		var loginButton = loginForm.find('button[type=submit]');
 		var loginError = loginForm.find('.text-error');
 
-		function setLoggedIn() {
-			loggedOut.fadeOut(null, function() {
-				loggedIn.fadeIn();
-			});
-		}
-
-		function setLoggedOut() {
-			loggedIn.fadeOut(null, function() {
-				loggedOut.fadeIn();
-			});
-		}
-
 		loginForm.submit(function() {
 			loginButton.button('loading');
 			loginError.slideUp('fast');
@@ -27,7 +37,6 @@ define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 				loginButton.button('reset');
 				if (res.success) {
 					loginForm.trigger('reset');
-					setLoggedIn();
 					loginDropdown.removeClass('open');
 				} else {
 					loginError.slideDown('fast');
@@ -50,7 +59,6 @@ define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 				if (res.success) {
 					registerForm.trigger('reset');
 					register.modal('hide');
-					setLoggedIn();
 				} else {
 					registerForm.find('input').after(function() {
 						var error = res[$(this).attr('name')];
@@ -70,9 +78,7 @@ define(['jquery', 'bootstrap', 'jquery.form'], function ($) {
 		});
 
 		$('#logout').click(function() {
-			$.ajax({ url: '/logout' }).done(function() {
-				setLoggedOut();
-			});
+			$.ajax({ url: '/logout' });
 			return false;
 		});
 	});

@@ -34,13 +34,4 @@ define(['jquery', 'socket'], function ($, socket) {
 		});
 	});
 
-	$(function(){
-		$('#nickname').click(function() {
-			var result = prompt('Enter a new nickname:');
-			if (result) {
-				socket.emit('nickname', result);
-			}
-		});
-	});
-
 });

@@ -16,7 +16,7 @@
 					<li><a href="#">Create Room <i class="icon-star"></i></a></li>
 				</ul>
 				<ul class="nav pull-right noscript-hide">
-					<li id="login-dropdown" class="dropdown logged-out">
+					<li id="login-dropdown" class="dropdown logged-out" style="display: none;">
 						<a class="dropdown-toggle" href="#" data-toggle="dropdown">Log In <i class="icon-share-alt"></i></a>
 						<div class="dropdown-menu" style="padding: 15px;">
 							<form method="post" action="/login">
@@ -27,7 +27,7 @@
 							</form>
 						</div>
 					</li>
-					<li class="logged-out"><a href="#register" role="button" data-toggle="modal">Register <i class="icon-edit"></i></a></li>
+					<li class="logged-out" style="display: none;"><a href="#register" role="button" data-toggle="modal">Register <i class="icon-edit"></i></a></li>
 					<li class="logged-in" style="display: none;"><a href="#">Settings <i class="icon-cog"></i></a></li>
 					<li class="logged-in" style="display: none;"><a id="logout" href="#">Log Out <i class="icon-arrow-left"></i></a></li>
 				</ul>
@@ -86,9 +86,6 @@
 			<div class="span8">
 				<div id="player-wrapper">
 					<div id="player"></div>
-				</div>
-				<div>
-					<button id="nickname" type="button" class="btn">Change Nickname</button>
 				</div>
 			</div>
 			<div class="span4">
