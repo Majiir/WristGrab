@@ -227,13 +227,17 @@ function sendSocketUser(socket) {
 	socket.emit('user', user ? user.username : null);
 }
 
+function isLeader(socket) {
+	return socket.handshake.address.address == '127.0.0.1';
+}
+
 io.sockets.on('connection', function (socket) {
 
 	updateList();
 	sendSocketUser(socket);
 
 	io.sockets.clients().forEach(function (sock) {
-		if (sock.handshake.address.address == '127.0.0.1') {
+		if (isLeader(sock)) {
 			sock.emit('requestPlayList');
 		}
 	});
@@ -245,12 +249,12 @@ io.sockets.on('connection', function (socket) {
 			'\tVideo: ' + videoId +
 			'\tLoaded: ' + loaded.toFixed(3)
 		);
-		if (socket.handshake.address.address == '127.0.0.1') {
+		if (isLeader(socket)) {
 			socket.broadcast.emit(status == states.PLAYING ? 'play' : 'pause', { timestamp: time, videoId: videoId });
 		} else {
 			if (status == states.PLAYING || status == states.CUED || status == states.UNSTARTED || status == states.ENDED) {
 				io.sockets.clients().forEach(function (sock) {
-					if (sock.handshake.address.address == '127.0.0.1') {
+					if (isLeader(sock)) {
 						sock.emit('requestUpdate');
 					}
 				});
@@ -267,7 +271,7 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('updatePlayList', function(list, index) {
-		if(socket.handshake.address.address == '127.0.0.1') {
+		if(isLeader(socket)) {
 			socket.broadcast.emit('refreshPlayList', list, index);
 		}
 	});
