@@ -3,12 +3,16 @@ define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player)
 	player.onStateChange(function (event) {
 		if (event.data == YT.PlayerState.ENDED) {
 			var current = $('#playlist tr.playing');
-			current.removeClass('playing');
 			var next = current.is(':last-child') ? $('#playlist tr:first') : current.next();
-			next.addClass('playing');
-			player.getPlayer().loadVideoById(next.attr('data-id'));
+			playEntry(next);
 		}
 	});
+
+	function playEntry(next) {
+		$('#playlist tr.playing').removeClass('playing');
+		next.addClass('playing');
+		player.getPlayer().loadVideoById(next.attr('data-id'));
+	}
 
 	function updatePlayList() {
 		var list = $('#playlist tr').map(function() { return $(this).attr('data-id'); }).get();
@@ -67,9 +71,7 @@ define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player)
 		});
 
 		$('#playlist').on('click', 'tr', function () {
-			$('#playlist tr.playing').removeClass('playing');
-			$(this).addClass('playing');
-			player.getPlayer().loadVideoById($(this).attr('data-id'));
+			playEntry($(this));
 		});
 
 	});
