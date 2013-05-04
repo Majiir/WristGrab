@@ -6,6 +6,9 @@ require.config({
 		'jquery.form': {
 			deps: ['jquery'],
 		},
+		'jquery-ui': {
+			deps: ['jquery'],
+		},
 		'socketio': {
 			exports: 'io',
 		},
@@ -18,5 +21,5 @@ require.config({
 
 require(['jquery'], function ($) {
 	$('.noscript-hide').removeClass('noscript-hide');
-	require(['chat', 'login', 'player']);
+	require(['chat', 'login', 'player', 'playlist']);
 });

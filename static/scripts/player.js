@@ -18,7 +18,7 @@ define(['jquery', 'socket'], function ($, socket) {
 	};
 
 	function onPlayerReady(event) {
-		player.getVideoId = function() { return player.j.videoData.video_id; }
+		player.getVideoId = function() { return player.k.videoData.video_id; }
 
 		socket.on('pause', function(data) {
 			if (data.videoId !== player.getVideoId()) {
@@ -47,6 +47,9 @@ define(['jquery', 'socket'], function ($, socket) {
 
 	function onPlayerStateChange(event) {
 		sendUpdate();
+		onStateChangeHandlers.forEach(function (fn) {
+			fn(event);
+		});
 	}
 
 	function sendUpdate() {
@@ -66,13 +69,16 @@ define(['jquery', 'socket'], function ($, socket) {
 		sendUpdate();
 	});
 
-	$(function(){
-		$('#change').click(function() {
-			var result = prompt('Enter a YouTube video ID:');
-			if (result) {
-				player.loadVideoById(result);
-			}
-		});
-	});
+	onStateChangeHandlers = [];
+
+	return {
+		onStateChange: function (fn) {
+			onStateChangeHandlers.push(fn);
+		},
+
+		getPlayer: function () {
+			return player;
+		},
+	};
 
 });
