@@ -236,9 +236,9 @@ io.sockets.on('connection', function (socket) {
 		updateList(socket);
 	});
 
-	socket.on('updatePlayList', function(list) {
+	socket.on('updatePlayList', function(list, index) {
 		if(socket.handshake.address.address == '127.0.0.1') {
-			socket.broadcast.emit('refreshPlayList', list);
+			socket.broadcast.emit('refreshPlayList', list, index);
 		}
 	});
 

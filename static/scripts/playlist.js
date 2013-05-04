@@ -11,12 +11,13 @@ define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player)
 	function playEntry(next) {
 		$('#playlist tr.playing').removeClass('playing');
 		next.addClass('playing');
+		updatePlayList();
 		player.getPlayer().loadVideoById(next.attr('data-id'));
 	}
 
 	function updatePlayList() {
 		var list = $('#playlist tr').map(function() { return $(this).attr('data-id'); }).get();
-		socket.emit('updatePlayList', list);
+		socket.emit('updatePlayList', list, $('#playlist tr.playing').index());
 	}
 
 	function addToPlayList(id){
@@ -53,9 +54,11 @@ define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player)
 		}
 	});
 
-	socket.on('refreshPlayList', function(list) {
+	socket.on('refreshPlayList', function(list, index) {
 		$('#playlist tbody').empty();
 		list.forEach(function(item) { addToPlayList(item); });
+		if (index < 0) { return; }
+		$('#playlist tr').eq(index).addClass('playing');
 	});
 
 	socket.on('requestPlayList', function(){
