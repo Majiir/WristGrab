@@ -96,7 +96,7 @@ p.lead {
 
 #table-scroll {
 	table-layout: fixed;
-	height: 300px;
+	height: ((@gridColumnWidth * 8) + (@gridGutterWidth * 7)) / (16 / 9) - 20px;
 	overflow: hidden;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -122,4 +122,8 @@ p.lead {
 #playlist tr.playing {
 	color: @grayLighter;
 	background-color: darken(@green, 15%);
+}
+
+#playlistControls {
+	height: 20px;
 }
