@@ -1,0 +1,15 @@
+@chatButtonWidth: 75px;
+
+#chatbox {
+	height: @baseLineHeight * 6;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+#chatinput {
+	width: (@gridColumnWidth * 8) + (@gridGutterWidth * 7) - @chatButtonWidth;
+}
+
+#chatbutton {
+	width: @chatButtonWidth;
+}

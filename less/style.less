@@ -3,28 +3,17 @@
 @import "cyborg/bootswatch.less";
 @import "utilities.less";
 
+@import "chat.less";
+@import "login.less";
+@import "player.less";
+@import "playlist.less";
+
 body {
 	margin-top: @navbarHeight + 1px;
 }
 
 .row-fluid {
 	margin-bottom: @baseLineHeight;
-}
-
-@chatButtonWidth: 75px;
-
-#chatbox {
-	height: @baseLineHeight * 6;
-	overflow-x: hidden;
-	overflow-y: scroll;
-}
-
-#chatinput {
-	width: (@gridColumnWidth * 8) + (@gridGutterWidth * 7) - @chatButtonWidth;
-}
-
-#chatbutton {
-	width: @chatButtonWidth;
 }
 
 p.lead {
@@ -36,21 +25,6 @@ p.lead {
 	margin-top: @baseLineHeight * 0.8;
 }
 
-#register {
-	background-color: @wellBackground;
-}
-
-#register form,
-#register .form-actions {
-	margin-bottom: 0;
-}
-
-#register .modal-body {
-	padding-left: 0;
-	padding-right: 0;
-	padding-bottom: 0;
-}
-
 .help-block.error {
 	.text-error;
 }
@@ -59,77 +33,10 @@ p.lead {
 	background-color: @blueDark;
 }
 
-#login-dropdown form {
-	margin-bottom: 0;
-}
-
 .btn:focus {
 	outline: none;
 }
 
-#login-dropdown form button[type=submit] {
-	margin-top: @baseLineHeight * 0.25;
-}
-
-#login-dropdown form .text-error {
-	margin-top: @baseLineHeight * 0.5;
-}
-
 .noscript-hide * {
 	display: none;
-}
-
-@playerAspectRatio: 16 / 9;
-
-#player-wrapper {
-	position: relative;
-	width: 100%;
-	padding-top: 100% / @playerAspectRatio;
-}
-
-#player {
-	border: none;
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-}
-
-@playlistControlsHeight: 20px;
-
-#table-scroll {
-	table-layout: fixed;
-	height: ((@gridColumnWidth * 8) + (@gridGutterWidth * 7)) / @playerAspectRatio - @playlistControlsHeight;
-	overflow: hidden;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-#playlist td:nth-child(1) {
-	max-width: 100px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	font-size: 75%;
-}
-
-#playlist td:nth-child(2) {
-	font-size: 75%;
-	width: 10%;
-}
-
-#playlist td:nth-child(3) {
-	width: 10%;
-}
-
-#playlist tr.playing {
-	color: @grayLighter;
-	background-color: darken(@green, 15%);
-}
-
-#playlistControls {
-	height: @playlistControlsHeight;
 }
