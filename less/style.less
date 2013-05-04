@@ -11,6 +11,8 @@ body {
 	margin-bottom: @baseLineHeight;
 }
 
+@chatButtonWidth: 75px;
+
 #chatbox {
 	height: @baseLineHeight * 6;
 	overflow-x: hidden;
@@ -18,11 +20,11 @@ body {
 }
 
 #chatinput {
-	width: (@gridColumnWidth * 8) + (@gridGutterWidth * 7) - 75px;
+	width: (@gridColumnWidth * 8) + (@gridGutterWidth * 7) - @chatButtonWidth;
 }
 
 #chatbutton {
-	width: 75px;
+	width: @chatButtonWidth;
 }
 
 p.lead {
@@ -77,10 +79,12 @@ p.lead {
 	display: none;
 }
 
+@playerAspectRatio: 16 / 9;
+
 #player-wrapper {
 	position: relative;
 	width: 100%;
-	padding-top: 100% / (16 / 9);
+	padding-top: 100% / @playerAspectRatio;
 }
 
 #player {
@@ -94,9 +98,11 @@ p.lead {
 	width: 100%;
 }
 
+@playlistControlsHeight: 20px;
+
 #table-scroll {
 	table-layout: fixed;
-	height: ((@gridColumnWidth * 8) + (@gridGutterWidth * 7)) / (16 / 9) - 20px;
+	height: ((@gridColumnWidth * 8) + (@gridGutterWidth * 7)) / @playerAspectRatio - @playlistControlsHeight;
 	overflow: hidden;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -125,5 +131,5 @@ p.lead {
 }
 
 #playlistControls {
-	height: 20px;
+	height: @playlistControlsHeight;
 }
