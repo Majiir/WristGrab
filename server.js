@@ -236,10 +236,8 @@ io.sockets.on('connection', function (socket) {
 	updateList();
 	sendSocketUser(socket);
 
-	io.sockets.clients().forEach(function (sock) {
-		if (isLeader(sock)) {
-			sock.emit('requestPlayList');
-		}
+	io.sockets.clients().filter(isLeader).forEach(function (sock) {
+		sock.emit('requestPlayList');
 	});
 
 	socket.on('update', function (status, time, videoId, loaded) {
@@ -253,10 +251,8 @@ io.sockets.on('connection', function (socket) {
 			socket.broadcast.emit(status == states.PLAYING ? 'play' : 'pause', { timestamp: time, videoId: videoId });
 		} else {
 			if (status == states.PLAYING || status == states.CUED || status == states.UNSTARTED || status == states.ENDED) {
-				io.sockets.clients().forEach(function (sock) {
-					if (isLeader(sock)) {
-						sock.emit('requestUpdate');
-					}
+				io.sockets.clients().filter(isLeader).forEach(function (sock) {
+					sock.emit('requestUpdate');
 				});
 			}
 		}
