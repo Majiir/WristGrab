@@ -102,19 +102,22 @@
 		<div class="row-fluid">
 			<div class="span8">
 				<div class="well">
-					<ul id="chatbox" class="unstyled">
+					<ul id="chatbox" class="unstyled" data-bind="foreach: { data: messages, afterAdd: scrollToBottom }">
+						<li><strong data-bind="text: sender + ':'"></strong>
+						<span data-bind="text: text"></span></li>
 					</ul>
 				</div>
-				<form id="chatform" class="form-inline">
+				<form id="chatform" class="form-inline" data-bind="submit: sendMessage">
 					<div class="input-append input-block-level">
-						<input id="chatinput" class="input-block-level" type="text" placeholder="Type a chat message..." autocomplete="off">
-						<button id="chatbutton" class="btn" type="submit">Send <i class="icon-comment icon-white"></i></button>
+						<input id="chatinput" class="input-block-level" type="text" data-bind="value: newMessageText, valueUpdate: 'afterkeydown'" placeholder="Type a chat message..." autocomplete="off">
+						<button id="chatbutton" class="btn" type="submit" data-bind="enable: newMessageText">Send <i class="icon-comment icon-white"></i></button>
 					</div>
 				</form>
 			</div>
 			<div class="span4">
 				<div class="well">
-					<ul id="chatlist" class="unstyled">
+					<ul id="chatlist" class="unstyled" data-bind="foreach: users">
+						<li data-bind="text: $data"></li>
 					</ul>
 				</div>
 			</div>

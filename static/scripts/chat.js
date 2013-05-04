@@ -1,37 +1,48 @@
-define(['jquery', 'socket'], function ($, socket) {
+define(['socket', 'knockout'], function (socket, ko) {
 
-	$('#chatform').submit(function() {
-		var input = $('#chatinput');
-		socket.emit('chat', input.val());
-		input.val('');
-		updateChatButton();
-		return false;
-	});
+	function Message(text, sender) {
+		this.text = text;
+		this.sender = sender;
+	}
 
-	var updateChatButton = function(event) {
-		if ($('#chatinput').val() == '') {
-			$('#chatbutton').attr('disabled', 'disabled');
-		} else {
-			$('#chatbutton').removeAttr('disabled');
-		}
-	};
+	function ChatViewModel() {
 
-	updateChatButton();
+		var self = this;
 
-	$('#chatinput').keyup(updateChatButton).keydown(updateChatButton).change(updateChatButton);
+		self.messages = ko.observableArray([]);
+		self.newMessageText = ko.observable();
+		self.users = ko.observableArray([]);
+
+		self.addMessage = function (message) {
+			self.messages.push(message);
+		};
+
+		self.sendMessage = function () {
+			socket.emit('chat', self.newMessageText());
+			self.newMessageText('');
+		};
+
+		self.scrollToBottom = function (element) {
+			var el = element.parentElement;
+			if (el.scrollTop == el.scrollHeight - el.clientHeight) {
+				setTimeout(function () { el.scrollTop = el.scrollHeight - el.clientHeight; }, 0);
+			}
+		};
+
+	}
+
+	var chatViewModel = new ChatViewModel();
 
 	socket.on('chat', function(data) {
-		var div = $('#chatbox');
-		div.append($('<li>').append($('<strong>').text(data.name + ': ')).append($('<span>').text(data.text)));
-		div.animate({ scrollTop: div.prop('scrollHeight') - div.height() }, 1);
+		chatViewModel.addMessage(new Message(data.text, data.name));
 	});
 
 	socket.on('list', function(list) {
-		$('#chatlist').empty();
-		$.each(list, function(index, item) {
-			var div = $('#chatlist');
-			div.append($('<li>').append($('<strong>').text(item)));
-		});
+		chatViewModel.users(list);
+	});
+
+	$(function(){
+		ko.applyBindings(chatViewModel);
 	});
 
 });
