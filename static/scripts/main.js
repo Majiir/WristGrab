@@ -1,7 +1,7 @@
 require.config({
 	shim: {
 		'bootstrap': {
-			deps: ['jquery'],
+			deps: ['jquery', 'jquery-ui'],
 		},
 		'jquery.form': {
 			deps: ['jquery'],
