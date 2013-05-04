@@ -21,5 +21,6 @@ require.config({
 
 require(['jquery'], function ($) {
 	$('.noscript-hide').removeClass('noscript-hide');
-	require(['chat', 'login', 'player', 'playlist']);
 });
+
+require(['chat', 'login', 'player', 'playlist']);
