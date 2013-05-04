@@ -196,6 +196,12 @@ io.sockets.on('connection', function (socket) {
 
 	updateList();
 
+	io.sockets.clients().forEach(function (sock) {
+		if (sock.handshake.address.address == '127.0.0.1') {
+			sock.emit('requestPlayList');
+		}
+	});
+
 	socket.on('update', function (status, time, videoId, loaded) {
 		console.log(
 			'Status: ' + stateNames[status] + '   ' +
@@ -228,6 +234,12 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('disconnect', function() {
 		updateList(socket);
+	});
+
+	socket.on('updatePlayList', function(list) {
+		if(socket.handshake.address.address == '127.0.0.1') {
+			socket.broadcast.emit('refreshPlayList', list);
+		}
 	});
 
 });

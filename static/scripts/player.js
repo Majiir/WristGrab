@@ -69,15 +69,6 @@ define(['jquery', 'socket'], function ($, socket) {
 		sendUpdate();
 	});
 
-	$(function(){
-		$('#change').click(function() {
-			var result = prompt('Enter a YouTube video ID:');
-			if (result) {
-				player.loadVideoById(result);
-			}
-		});
-	});
-
 	onStateChangeHandlers = [];
 
 	return {

@@ -93,3 +93,33 @@ p.lead {
 	height: 100%;
 	width: 100%;
 }
+
+#table-scroll {
+	table-layout: fixed;
+	height: 300px;
+	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#playlist td:nth-child(1) {
+	max-width: 100px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 75%;
+}
+
+#playlist td:nth-child(2) {
+	font-size: 75%;
+	width: 10%;
+}
+
+#playlist td:nth-child(3) {
+	width: 10%;
+}
+
+#playlist tr.playing {
+	color: @grayLighter;
+	background-color: darken(@green, 15%);
+}
