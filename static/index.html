@@ -15,8 +15,8 @@
 					<li><a href="#">Browse Rooms <i class="icon-th-large"></i></a></li>
 					<li><a href="#">Create Room <i class="icon-star"></i></a></li>
 				</ul>
-				<ul class="nav pull-right noscript-hide">
-					<li id="login-dropdown" class="dropdown logged-out" style="display: none;">
+				<ul class="nav pull-right noscript-hide logged-out" style="display: none;">
+					<li id="login-dropdown" class="dropdown">
 						<a class="dropdown-toggle" href="#" data-toggle="dropdown">Log In <i class="icon-share-alt"></i></a>
 						<div class="dropdown-menu" style="padding: 15px;">
 							<form method="post" action="/login">
@@ -27,9 +27,11 @@
 							</form>
 						</div>
 					</li>
-					<li class="logged-out" style="display: none;"><a href="#register" role="button" data-toggle="modal">Register <i class="icon-edit"></i></a></li>
-					<li class="logged-in" style="display: none;"><a href="#">Settings <i class="icon-cog"></i></a></li>
-					<li class="logged-in" style="display: none;"><a id="logout" href="#">Log Out <i class="icon-arrow-left"></i></a></li>
+					<li><a href="#register" role="button" data-toggle="modal">Register <i class="icon-edit"></i></a></li>
+				</ul>
+				<ul class="nav pull-right noscript-hide logged-in" style="display: none;">
+					<li><a href="#">Settings <i class="icon-cog"></i></a></li>
+					<li><a id="logout" href="#">Log Out <i class="icon-arrow-left"></i></a></li>
 				</ul>
 			</div>
 		</div>
