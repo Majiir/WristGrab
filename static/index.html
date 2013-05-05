@@ -99,7 +99,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row-fluid">
+		<div class="row-fluid" data-bind="with: chat">
 			<div class="span8">
 				<div class="well">
 					<ul id="chatbox" class="unstyled" data-bind="foreach: { data: messages, afterAdd: scrollToBottom }">

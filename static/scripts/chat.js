@@ -41,8 +41,8 @@ define(['socket', 'knockout'], function (socket, ko) {
 		chatViewModel.users(list);
 	});
 
-	$(function(){
-		ko.applyBindings(chatViewModel);
-	});
+	return {
+		viewModel: chatViewModel,
+	};
 
 });
