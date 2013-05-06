@@ -6,6 +6,10 @@ define(['jquery', 'socket', 'knockout', 'bootstrap', 'jquery.form'], function ($
 
 		self.user = ko.observable();
 
+		self.logout = function () {
+			$.ajax({ url: '/logout' });
+		};
+
 	}
 
 	var loginViewModel = new LoginViewModel();
@@ -67,11 +71,6 @@ define(['jquery', 'socket', 'knockout', 'bootstrap', 'jquery.form'], function ($
 		register.on('hidden', function() {
 			registerForm.trigger('reset');
 			registerForm.find('.error').remove();
-		});
-
-		$('#logout').click(function() {
-			$.ajax({ url: '/logout' });
-			return false;
 		});
 	});
 
