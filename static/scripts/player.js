@@ -10,6 +10,9 @@ define(['jquery', 'socket'], function ($, socket) {
 	window.onYouTubeIframeAPIReady = function () {
 		player = new YT.Player('player', {
 			videoId: 'U7mPqycQ0tQ',
+			playerVars: {
+				wmode: 'transparent',
+			},
 			events: {
 				'onReady': onPlayerReady,
 				'onStateChange': onPlayerStateChange
