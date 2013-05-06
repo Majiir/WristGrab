@@ -1,25 +1,17 @@
-define(['jquery', 'socket', 'bootstrap', 'jquery.form'], function ($, socket) {
+define(['jquery', 'socket', 'knockout', 'bootstrap', 'jquery.form'], function ($, socket, ko) {
 
-	function setLoggedIn() {
-		$('.logged-out').fadeOut(null, function() {
-			$('.logged-in').fadeIn();
-		});
+	function LoginViewModel() {
+
+		var self = this;
+
+		self.user = ko.observable();
+
 	}
 
-	function setLoggedOut() {
-		$('.logged-in').fadeOut(null, function() {
-			$('.logged-out').fadeIn();
-		});
-	}
+	var loginViewModel = new LoginViewModel();
 
 	socket.on('user', function (user) {
-		$(function(){
-			if (user) {
-				setLoggedIn();
-			} else {
-				setLoggedOut();
-			}
-		});
+		loginViewModel.user(user);
 	});
 
 	$(function(){
@@ -82,5 +74,9 @@ define(['jquery', 'socket', 'bootstrap', 'jquery.form'], function ($, socket) {
 			return false;
 		});
 	});
+
+	return {
+		viewModel: loginViewModel,
+	};
 
 });

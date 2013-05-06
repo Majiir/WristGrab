@@ -15,7 +15,7 @@
 					<li><a href="#">Browse Rooms <i class="icon-th-large"></i></a></li>
 					<li><a href="#">Create Room <i class="icon-star"></i></a></li>
 				</ul>
-				<ul class="nav pull-right logged-out" style="display: none;">
+				<ul class="nav pull-right" style="display: none;" data-bind="visible: login.user() === null">
 					<li id="login-dropdown" class="dropdown">
 						<a class="dropdown-toggle" href="#" data-toggle="dropdown">Log In <i class="icon-share-alt"></i></a>
 						<div class="dropdown-menu" style="padding: 15px;">
@@ -29,7 +29,7 @@
 					</li>
 					<li><a href="#register" role="button" data-toggle="modal">Register <i class="icon-edit"></i></a></li>
 				</ul>
-				<ul class="nav pull-right logged-in" style="display: none;">
+				<ul class="nav pull-right" style="display: none;" data-bind="visible: login.user">
 					<li><a href="#">Settings <i class="icon-cog"></i></a></li>
 					<li><a id="logout" href="#">Log Out <i class="icon-arrow-left"></i></a></li>
 				</ul>
