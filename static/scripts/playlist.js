@@ -1,5 +1,27 @@
 define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player) {
 
+	var videoInfoCache = {};
+	var videoInfoRequests = {};
+
+	function getVideoInfo(id, fn) {
+		if (id in videoInfoCache) {
+			fn(videoInfoCache[id]);
+		} else if (id in videoInfoRequests) {
+			videoInfoRequests[id].done(function (data) {
+				fn(data);
+			});
+		} else {
+			videoInfoRequests[id] = $.ajax({
+				url: 'http://gdata.youtube.com/feeds/api/videos/' + id + '?v=2&alt=json',
+				dataType: 'jsonp',
+			}).done(function (data) {
+				videoInfoCache[id] = data;
+				delete videoInfoRequests[id];
+				fn(data);
+			});
+		}
+	}
+
 	player.onStateChange(function (event) {
 		if (event.data == YT.PlayerState.ENDED) {
 			var current = $('#playlist tr.playing');
@@ -23,13 +45,9 @@ define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player)
 	function addToPlayList(id){
 		$('#playlist tbody').append('<tr data-id="'+id+'"><td>Loading...</td><td>Loading...</td><td><button class="close">&times;</button></td></tr>');
 
-		$.ajax({
-			url: "http://gdata.youtube.com/feeds/api/videos/"+id+"?v=2&alt=json",
-			dataType: "jsonp",
-			success: function (data) {
+		getVideoInfo(id, function (data) {
 				$('#playlist tr[data-id='+id+'] td:nth-child(1)').text(data.entry.title.$t);
 				$('#playlist tr[data-id='+id+'] td:nth-child(2)').text(data.entry.media$group.yt$duration.seconds);
-			}
 		});
 	}
 
