@@ -23,13 +23,14 @@ require(['jquery'], function ($) {
 	$('.noscript-hide').removeClass('noscript-hide');
 });
 
-require(['player', 'playlist']);
+require(['player']);
 
-require(['jquery', 'knockout', 'chat', 'login'], function ($, ko, chat, login) {
+require(['jquery', 'knockout', 'chat', 'login', 'playlist'], function ($, ko, chat, login, playlist) {
 	$(function(){
 		ko.applyBindings({
 			chat: chat.viewModel,
 			login: login.viewModel,
+			playlist: playlist.viewModel,
 		});
 	});
 });

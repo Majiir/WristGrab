@@ -1,4 +1,4 @@
-define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player) {
+define(['jquery', 'socket', 'player', 'knockout', 'jquery-ui'], function ($, socket, player, ko) {
 
 	var videoInfoCache = {};
 	var videoInfoRequests = {};
@@ -21,6 +21,36 @@ define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player)
 			});
 		}
 	}
+
+	function VideoViewModel(id) {
+		this.id = id;
+	}
+
+	function PlaylistViewModel() {
+
+		var self = this;
+
+		self.currentVideo = ko.observable();
+		self.videos = ko.observableArray([]);
+
+		self.addVideo = function() {
+			var id = prompt('Enter a YouTube video ID:');
+			if (id) {
+				self.videos.push(new VideoViewModel(id));
+			}
+		};
+
+		self.removeVideo = function(video) {
+			self.videos.remove(video);
+		};
+
+		self.playVideo = function(video) {
+			self.currentVideo(video);
+			player.getPlayer().loadVideoById(video.id);
+		};
+	}
+
+	var playlistViewModel = new PlaylistViewModel();
 
 	player.onStateChange(function (event) {
 		if (event.data == YT.PlayerState.ENDED) {
@@ -96,5 +126,9 @@ define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player)
 		});
 
 	});
+
+	return {
+		viewModel: playlistViewModel,
+	};
 
 });
