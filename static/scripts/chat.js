@@ -18,6 +18,7 @@ define(['socket', 'knockout'], function (socket, ko) {
 		};
 
 		self.sendMessage = function () {
+			if (!self.newMessageText()) { return; }
 			socket.emit('chat', self.newMessageText());
 			self.newMessageText('');
 		};
