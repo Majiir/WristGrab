@@ -19,6 +19,8 @@ require.config({
 	},
 });
 
+define('jquery.ui.sortable', ['jquery-ui']);
+
 require(['jquery'], function ($) {
 	$('.noscript-hide').removeClass('noscript-hide');
 });

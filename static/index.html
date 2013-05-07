@@ -90,14 +90,25 @@
 					<div id="player"></div>
 				</div>
 			</div>
-			<div class="span4">
+			<div class="span4" data-bind="with: playlist">
 				<div id="table-scroll">
 					<table class="table table-striped table-condensed" id="playlist">
-						<tbody></tbody>
+						<tbody data-bind="sortable: videos">
+							<tr data-bind="click: $parent.playVideo, css: { playing: $parent.currentVideo() === $data }">
+								<!-- ko if: info -->
+									<td data-bind="text: info().title"></td>
+									<td data-bind="text: info().duration"></td>
+								<!-- /ko -->
+								<!-- ko ifnot: info -->
+									<td colspan="2">Loading...</td>
+								<!-- /ko -->
+								<td><button class="close" data-bind="click: $parent.removeVideo">&times;</button></td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 				<div id="playlistControls">
-					<button id="add" type="button" class="btn btn-mini"><i class="icon-plus"></i></button>
+					<button type="button" class="btn btn-mini" data-bind="click: addVideo"><i class="icon-plus"></i></button>
 				</div>
 			</div>
 		</div>
