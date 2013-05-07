@@ -1,4 +1,4 @@
-define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player) {
+define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable'], function ($, socket, player, ko) {
 
 	var videoInfoCache = {};
 	var videoInfoRequests = {};
@@ -22,79 +22,82 @@ define(['jquery', 'socket', 'player', 'jquery-ui'], function ($, socket, player)
 		}
 	}
 
-	player.onStateChange(function (event) {
-		if (event.data == YT.PlayerState.ENDED) {
-			var current = $('#playlist tr.playing');
-			var next = current.is(':last-child') ? $('#playlist tr:first') : current.next();
-			playEntry(next);
-		}
-	});
+	function VideoViewModel(id) {
 
-	function playEntry(next) {
-		$('#playlist tr.playing').removeClass('playing');
-		next.addClass('playing');
-		updatePlayList();
-		player.getPlayer().loadVideoById(next.attr('data-id'));
-	}
+		var self = this;
 
-	function updatePlayList() {
-		var list = $('#playlist tr').map(function() { return $(this).attr('data-id'); }).get();
-		socket.emit('updatePlayList', list, $('#playlist tr.playing').index());
-	}
+		self.id = id;
 
-	function addToPlayList(id){
-		$('#playlist tbody').append('<tr data-id="'+id+'"><td>Loading...</td><td>Loading...</td><td><button class="close">&times;</button></td></tr>');
+		self.info = ko.observable();
 
 		getVideoInfo(id, function (data) {
-				$('#playlist tr[data-id='+id+'] td:nth-child(1)').text(data.entry.title.$t);
-				$('#playlist tr[data-id='+id+'] td:nth-child(2)').text(data.entry.media$group.yt$duration.seconds);
+			self.info({
+				title: data.entry.title.$t,
+				duration: data.entry.media$group.yt$duration.seconds,
+			});
 		});
+
 	}
 
-	$(document).ready(function() {
-		$("#playlist").sortable({
-			containment: 'parent',
-			distance: 10,
-			items: 'tr',
-			scroll: true,
-			tolerance: 'pointer',
-			update: function(event, ui) {
-				updatePlayList();
-			},
-		});
-	});
+	function PlaylistViewModel() {
 
-	$('#add').click(function () {
-		var id = prompt('Enter a YouTube video ID:');
-		if (id) {
-			addToPlayList(id);
-			updatePlayList();
+		var self = this;
+
+		self.currentVideo = ko.observable();
+		self.videos = ko.observableArray([]);
+
+		self.addVideo = function() {
+			var id = prompt('Enter a YouTube video ID:');
+			if (id) {
+				self.videos.push(new VideoViewModel(id));
+			}
+		};
+
+		self.removeVideo = function(video) {
+			self.videos.remove(video);
+		};
+
+		self.playVideo = function(video) {
+			self.currentVideo(video);
+			player.getPlayer().loadVideoById(video.id);
+		};
+	}
+
+	var playlistViewModel = new PlaylistViewModel();
+
+	player.onStateChange(function (event) {
+		if (event.data == YT.PlayerState.ENDED) {
+			var index = playlistViewModel.videos.indexOf(playlistViewModel.currentVideo());
+			if (index < 0) { return; }
+			var next = index + 1;
+			if (next >= playlistViewModel.videos().length) {
+				next = 0;
+			}
+			playlistViewModel.playVideo(playlistViewModel.videos()[next]);
 		}
 	});
 
+	function updatePlayList() {
+		socket.emit('updatePlayList',
+			playlistViewModel.videos().map(function (video) { return video.id; }),
+			playlistViewModel.videos.indexOf(playlistViewModel.currentVideo())
+		);
+	}
+
+	playlistViewModel.currentVideo.subscribe(updatePlayList);
+	playlistViewModel.videos.subscribe(updatePlayList);
+
 	socket.on('refreshPlayList', function(list, index) {
-		$('#playlist tbody').empty();
-		list.forEach(function(item) { addToPlayList(item); });
-		if (index < 0) { return; }
-		$('#playlist tr').eq(index).addClass('playing');
+		playlistViewModel.videos(list.map(function (id) { return new VideoViewModel(id); }));
+		playlistViewModel.currentVideo(playlistViewModel.videos()[index]);
 	});
 
 	socket.on('requestPlayList', function(){
 		updatePlayList();
 	});
 
-	$(function() {
-
-		$('#playlist').on('click', 'button.close', function () {
-			$(this).closest('tr').remove();
-			updatePlayList();
-			return false;
-		});
-
-		$('#playlist').on('click', 'tr', function () {
-			playEntry($(this));
-		});
-
-	});
+	return {
+		viewModel: playlistViewModel,
+	};
 
 });
