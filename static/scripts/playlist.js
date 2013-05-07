@@ -28,6 +28,15 @@ define(['jquery', 'socket', 'player', 'knockout', 'jquery-ui'], function ($, soc
 
 		self.id = id;
 
+		self.info = ko.observable();
+
+		getVideoInfo(id, function (data) {
+			self.info({
+				title: data.entry.title.$t,
+				duration: data.entry.media$group.yt$duration.seconds,
+			});
+		});
+
 	}
 
 	function PlaylistViewModel() {
