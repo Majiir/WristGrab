@@ -23,7 +23,11 @@ define(['jquery', 'socket', 'player', 'knockout', 'jquery-ui'], function ($, soc
 	}
 
 	function VideoViewModel(id) {
-		this.id = id;
+
+		var self = this;
+
+		self.id = id;
+
 	}
 
 	function PlaylistViewModel() {
