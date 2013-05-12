@@ -155,15 +155,10 @@ var server = http.createServer(connect()
 					res.json({ success: true });
 				});
 		},
-		'GET /playlist/load': function (req,res,next){
-
-			var playlistname = "pl";
-			var index = 0;
-
-			db.get(playlistname, function(err, playlist) {
+		'POST /playlist/load': function (req,res,next){
+			db.get(req.body.name, function(err, playlist) {
 				if(playlist){
 					var list = playlist.videos;
-					console.log(list);
 					res.json({ success: true, videos: list});
 				}			
 			});

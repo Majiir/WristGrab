@@ -49,7 +49,7 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 
 		self.currentVideo = ko.observable();
 		self.videos = ko.observableArray([]);
-		self.savePlaylistName = ko.observable();
+		self.playlistName = ko.observable();
 
 		self.addVideo = function() {
 			var id = prompt('Enter a YouTube video ID:');
@@ -70,31 +70,30 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 		self.savePlaylist = function(video) {
 
 			var  playlist = ko.toJSON(self.videos());
-			var saveName = "DID IT WORK?";
 
 			$.ajax({
 				type: 'POST',
 				url: '/playlist/save',
-				data: {"name": saveName, "playlist": playlist},
+				data: {"name": self.playlistName, "playlist": playlist},
 				dataType: 'json',
-				success: function (data) {
-					alert(playlist);
-				}
+				success: function (data) {}
 			});
 		};
 
 		self.loadPlaylist = function(video) {
 
-			self.videos.removeAll();
-
 			$.ajax({
-				type: 'GET',
+				type: 'POST',
 				url: '/playlist/load',
-				data: {},
+				data: {"name": self.playlistName},
 				dataType: 'json',
 				success: function (data) {
-					for(var i in data.videos)
-						self.videos.push(new VideoViewModel(data.videos[i]));
+					self.videos.removeAll();
+					data = JSON.parse(data.videos);
+					console.log(data);
+					$.each(data, function(index, id){
+						self.videos.push(new VideoViewModel(id));
+					});
 				}
 			});
 		};
