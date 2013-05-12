@@ -112,8 +112,8 @@
 					<span class="popover-markup">
 						<button type="button" class="btn btn-mini trigger"><i class="icon-leaf"></i></button> 
 						<div class="content hide" id="playlistSave">
-								<input type="text" name="playlistname" placeholder="Playlist Name">
-								<button data-bind="click: savePlaylist" type="button" class="btn btn-block" >Save</button>
+							<input type="text" name="playlistname" placeholder="Playlist Name">
+							<button data-bind="click: savePlaylist" type="button" class="btn btn-block" >Save</button>
 						</div>
 					</span>
 					<span class="popover-markup" id="playlistLoad">
@@ -128,7 +128,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="row-fluid" data-bind="with: chat">
 			<div class="span8">
 				<div class="well">
@@ -152,13 +151,11 @@
 				</div>
 			</div>
 		</div>
-
-<div data-bind="with: playlist">
-<input data-bind="value: playlistName" type="text" placeholder="Playlist Name">
-<button data-bind="click: savePlaylist">Save</button>
-<button data-bind="click: loadPlaylist">Load</button>
-</div>
-
+		<div data-bind="with: playlist">
+			<input data-bind="value: playlistName" type="text" placeholder="Playlist Name">
+			<button data-bind="click: savePlaylist">Save</button>
+			<button data-bind="click: loadPlaylist">Load</button>
+		</div>
 	</div>
 </body>
 </html>

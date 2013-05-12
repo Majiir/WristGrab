@@ -39,9 +39,9 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 
 	}
 
-	VideoViewModel.prototype.toJSON = function() {
-			return ko.utils.unwrapObservable(this.id);
-		}
+	VideoViewModel.prototype.toJSON = function () {
+		return ko.utils.unwrapObservable(this.id);
+	}
 
 	function PlaylistViewModel() {
 
@@ -68,33 +68,30 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 		};
 
 		self.savePlaylist = function(video) {
-
-			var  playlist = ko.toJSON(self.videos());
-
+			var playlist = ko.toJSON(self.videos());
 			$.ajax({
 				type: 'POST',
 				url: '/playlist/save',
-				data: {"name": self.playlistName, "playlist": playlist},
+				data: { 'name': self.playlistName, 'playlist': playlist },
 				dataType: 'json',
-				success: function (data) {}
+				success: function (data) { },
 			});
 		};
 
 		self.loadPlaylist = function(video) {
-
 			$.ajax({
 				type: 'POST',
 				url: '/playlist/load',
-				data: {"name": self.playlistName},
+				data: { 'name': self.playlistName },
 				dataType: 'json',
 				success: function (data) {
 					self.videos.removeAll();
 					data = JSON.parse(data.videos);
 					console.log(data);
-					$.each(data, function(index, id){
+					$.each(data, function (index, id) {
 						self.videos.push(new VideoViewModel(id));
 					});
-				}
+				},
 			});
 		};
 
@@ -144,7 +141,6 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 		loadForm.submit(function() {
 			return false;
 		});
-
 	});
 
 	$('.popover-markup>.trigger').popover({ 
@@ -152,7 +148,7 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 		animation : true,
 		placement : 'bottom',
 		content: function() {
- 		return $(this).parent().find('.content').html();
+ 			return $(this).parent().find('.content').html();
 		}
 	});
 

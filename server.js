@@ -146,20 +146,20 @@ var server = http.createServer(connect()
 			});
 		},
 		'POST /playlist/save': function (req, res, next) {
-				var playlist = {
-					name: req.body.name,
-					videos: req.body.playlist
-				};
+			var playlist = {
+				name: req.body.name,
+				videos: req.body.playlist,
+			};
 
-				db.set(req.body.name, playlist, function (err) {
-					res.json({ success: true });
-				});
+			db.set(req.body.name, playlist, function (err) {
+				res.json({ success: true });
+			});
 		},
 		'POST /playlist/load': function (req,res,next){
-			db.get(req.body.name, function(err, playlist) {
-				if(playlist){
+			db.get(req.body.name, function (err, playlist) {
+				if (playlist) {
 					var list = playlist.videos;
-					res.json({ success: true, videos: list});
+					res.json({ success: true, videos: list });
 				}			
 			});
 		}
@@ -244,7 +244,6 @@ function sendSocketUser(socket) {
 	var user = socket.handshake.session.user;
 	socket.emit('user', user ? user.username : null);
 }
-
 
 io.sockets.on('connection', function (socket) {
 
