@@ -87,7 +87,6 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 				success: function (data) {
 					self.videos.removeAll();
 					data = JSON.parse(data.videos);
-					console.log(data);
 					$.each(data, function (index, id) {
 						self.videos.push(new VideoViewModel(id));
 					});
