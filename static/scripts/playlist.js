@@ -39,10 +39,6 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 
 	}
 
-	VideoViewModel.prototype.toJSON = function () {
-		return ko.utils.unwrapObservable(this.id);
-	}
-
 	function PlaylistViewModel() {
 
 		var self = this;
@@ -68,7 +64,7 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 		};
 
 		self.savePlaylist = function(video) {
-			var playlist = ko.toJSON(self.videos());
+			var playlist = self.videos().map(function (video) { return video.id; });
 			$.ajax({
 				type: 'POST',
 				url: '/playlist/save',
@@ -86,8 +82,7 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstra
 				dataType: 'json',
 				success: function (data) {
 					self.videos.removeAll();
-					data = JSON.parse(data.videos);
-					$.each(data, function (index, id) {
+					$.each(data.videos, function (index, id) {
 						self.videos.push(new VideoViewModel(id));
 					});
 				},
