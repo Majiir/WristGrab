@@ -1,4 +1,4 @@
-define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable'], function ($, socket, player, ko) {
+define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable', 'bootstrap', 'jquery.form'], function ($, socket, player, ko) {
 
 	var videoInfoCache = {};
 	var videoInfoRequests = {};
@@ -39,12 +39,17 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable'], function
 
 	}
 
+	VideoViewModel.prototype.toJSON = function() {
+			return ko.utils.unwrapObservable(this.id);
+		}
+
 	function PlaylistViewModel() {
 
 		var self = this;
 
 		self.currentVideo = ko.observable();
 		self.videos = ko.observableArray([]);
+		self.savePlaylistName = ko.observable();
 
 		self.addVideo = function() {
 			var id = prompt('Enter a YouTube video ID:');
@@ -61,6 +66,39 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable'], function
 			self.currentVideo(video);
 			player.getPlayer().loadVideoById(video.id);
 		};
+
+		self.savePlaylist = function(video) {
+
+			var  playlist = ko.toJSON(self.videos());
+			var saveName = "DID IT WORK?";
+
+			$.ajax({
+				type: 'POST',
+				url: '/playlist/save',
+				data: {"name": saveName, "playlist": playlist},
+				dataType: 'json',
+				success: function (data) {
+					alert(playlist);
+				}
+			});
+		};
+
+		self.loadPlaylist = function(video) {
+
+			self.videos.removeAll();
+
+			$.ajax({
+				type: 'GET',
+				url: '/playlist/load',
+				data: {},
+				dataType: 'json',
+				success: function (data) {
+					for(var i in data.videos)
+						self.videos.push(new VideoViewModel(data.videos[i]));
+				}
+			});
+		};
+
 	}
 
 	var playlistViewModel = new PlaylistViewModel();
@@ -94,6 +132,29 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable'], function
 
 	socket.on('requestPlayList', function(){
 		updatePlayList();
+	});
+
+	$(function(){
+		var saveForm = $('#playlistSave').find('form');
+		var loadForm = $('playlistLoad').find('form');
+
+		saveForm.submit(function() {
+			return false;
+		});
+
+		loadForm.submit(function() {
+			return false;
+		});
+
+	});
+
+	$('.popover-markup>.trigger').popover({ 
+		html : true,
+		animation : true,
+		placement : 'bottom',
+		content: function() {
+ 		return $(this).parent().find('.content').html();
+		}
 	});
 
 	return {

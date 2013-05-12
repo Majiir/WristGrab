@@ -144,6 +144,29 @@ var server = http.createServer(connect()
 			updateSessionUser(req.session, null, function() {
 				res.status(204).send();
 			});
+		},
+		'POST /playlist/save': function (req, res, next) {
+				var playlist = {
+					name: req.body.name,
+					videos: req.body.playlist
+				};
+
+				db.set(req.body.name, playlist, function (err) {
+					res.json({ success: true });
+				});
+		},
+		'GET /playlist/load': function (req,res,next){
+
+			var playlistname = "pl";
+			var index = 0;
+
+			db.get(playlistname, function(err, playlist) {
+				if(playlist){
+					var list = playlist.videos;
+					console.log(list);
+					res.json({ success: true, videos: list});
+				}			
+			});
 		}
 	}))
 	.use(lessMiddleware({
@@ -226,6 +249,7 @@ function sendSocketUser(socket) {
 	var user = socket.handshake.session.user;
 	socket.emit('user', user ? user.username : null);
 }
+
 
 io.sockets.on('connection', function (socket) {
 
