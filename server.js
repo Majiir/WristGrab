@@ -79,7 +79,7 @@ var form = require('form');
 var registerForm = form.create({
 	username: [
 		form.validator(form.Validator.len, 4, 32, 'Username must be 4-32 characters.'),
-		form.validator(form.Validator.is, /^([A-Za-z0-9]+ ?)*[A-Za-z0-9]+$/, 'Username may only contain A-Z, a-z, 0-9 and spaces.'),
+		form.validator(form.Validator.is, /^[A-Za-z0-9]+( [A-Za-z0-9]+)*$/, 'Username may only contain A-Z, a-z, 0-9 and spaces.'),
 	],
 	password: [
 		form.validator(form.Validator.len, 6, 64, 'Password must be 6-64 characters.'),
