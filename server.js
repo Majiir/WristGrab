@@ -82,7 +82,7 @@ var registerForm = form.create({
 		form.validator(form.Validator.is, /^([A-Za-z0-9]+ ?)*[A-Za-z0-9]+$/, 'Username may only contain A-Z, a-z, 0-9 and spaces.'),
 	],
 	password: [
-		form.validator(form.Validator.len, 6, 32, 'Password must be 6-64 characters.'),
+		form.validator(form.Validator.len, 6, 64, 'Password must be 6-64 characters.'),
 	],
 	email: [
 		form.validator(form.Validator.isEmail, 'Please enter a valid e-mail address.'),
