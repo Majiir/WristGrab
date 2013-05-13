@@ -21,7 +21,7 @@ define(['jquery', 'socket'], function ($, socket) {
 	};
 
 	function onPlayerReady(event) {
-		player.getVideoId = function() { return player.k.videoData.video_id; }
+		player.getVideoId = function() { return player.o.videoData.video_id; }
 
 		socket.on('pause', function(data) {
 			if (data.videoId !== player.getVideoId()) {
