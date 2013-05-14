@@ -231,8 +231,31 @@ function sendSocketUser(socket) {
 	socket.emit('user', user ? user.username : null);
 }
 
+function getLeader() {
+
+	function min(arr, compare) {
+		if (arr.length == 0) { return undefined; }
+		var lowest = arr[0];
+		for (var i = 1; i < arr.length; i++) {
+			if (compare(lowest, arr[i]) > 0) {
+				lowest = arr[i];
+			}
+		}
+		return lowest;
+	}
+
+	function getTime(socket) {
+		return Date.parse(socket.handshake.time).getTime();
+	}
+
+	return min(io.sockets.clients().filter(connected), function (a, b) {
+		return getTime(a) - getTime(b);
+	});
+
+}
+
 function isLeader(socket) {
-	return socket.handshake.address.address == '127.0.0.1';
+	return socket === getLeader();
 }
 
 io.sockets.on('connection', function (socket) {
