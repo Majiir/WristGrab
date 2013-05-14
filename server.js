@@ -210,7 +210,7 @@ function connected(socket) {
 
 function getSocketNickname(socket) {
 	var user = socket.handshake.session.user;
-	return user ? user.username : 'Guest';
+	return (user ? user.username : 'Guest') + (isLeader(socket) ? '*' : '');
 }
 
 function updateList() {
