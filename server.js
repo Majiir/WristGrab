@@ -204,14 +204,18 @@ io.configure(function () {
  * Socket events.
  */
 
+function connected(socket) {
+	return !socket.disconnected && !socket.disconnecting;
+}
+
 function getSocketNickname(socket) {
 	var user = socket.handshake.session.user;
 	return user ? user.username : 'Guest';
 }
 
-function updateList(disconnecting) {
+function updateList() {
 	var list = io.sockets.clients()
-		.filter(function (socket) { return socket !== disconnecting; })
+		.filter(connected)
 		.map(getSocketNickname);
 	io.sockets.emit('list', list);
 }
@@ -263,7 +267,8 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('disconnect', function() {
-		updateList(socket);
+		socket.disconnecting = true;
+		updateList();
 	});
 
 	socket.on('updatePlayList', function(list, index) {
