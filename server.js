@@ -140,7 +140,7 @@ var server = http.createServer(connect()
 				});
 			});
 		},
-		'GET /logout': function(req, res, next) {
+		'POST /logout': function(req, res, next) {
 			updateSessionUser(req.session, null, function() {
 				res.status(204).send();
 			});

@@ -7,7 +7,7 @@ define(['jquery', 'socket', 'knockout', 'bootstrap', 'jquery.form'], function ($
 		self.user = ko.observable();
 
 		self.logout = function () {
-			$.ajax({ url: '/logout' });
+			$.post('/logout');
 		};
 
 	}
