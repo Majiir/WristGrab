@@ -22,7 +22,7 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable'], function
 		}
 	}
 
-	function VideoViewModel(id) {
+	function Video(id) {
 
 		var self = this;
 
@@ -49,7 +49,7 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable'], function
 		self.addVideo = function() {
 			var id = prompt('Enter a YouTube video ID:');
 			if (id) {
-				self.videos.push(new VideoViewModel(id));
+				self.videos.push(new Video(id));
 			}
 		};
 
@@ -88,7 +88,7 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable'], function
 	playlistViewModel.videos.subscribe(updatePlayList);
 
 	socket.on('refreshPlayList', function(list, index) {
-		playlistViewModel.videos(list.map(function (id) { return new VideoViewModel(id); }));
+		playlistViewModel.videos(list.map(function (id) { return new Video(id); }));
 		playlistViewModel.currentVideo(playlistViewModel.videos()[index]);
 	});
 
