@@ -39,6 +39,14 @@ define(['jquery', 'socket', 'player', 'knockout', 'knockout-sortable'], function
 
 	}
 
+	function Playlist(name) {
+
+		var self = this;
+
+		self.name = ko.observable(name);
+
+	}
+
 	function PlaylistViewModel() {
 
 		var self = this;
