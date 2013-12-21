@@ -93,8 +93,6 @@ var registerForm = form.create({
  * Servers.
  */
 
-var file = new(require('node-static').Server)(config.file.path, { cache: config.file.cache });
-
 var server = http.createServer(connect()
 	.use(connect.cookieParser())
 	.use(connect.session({ cookie: { maxAge: config.session.maxAge }, key: config.session.key, secret: config.session.secret, store: config.session.store }))
@@ -154,16 +152,7 @@ var server = http.createServer(connect()
 		dest: './static',
 		src: './less',
 	}))
-	.use(function (req, res) {
-		file.serve(req, res, function (err, result) {
-			if (err) {
-				res.writeHead(err.status, err.headers);
-				res.end('Error ' + err.status + '\n');
-			} else {
-				console.log(result.status + ': ' + req.method + ' ' + req.url);
-			}
-		});
-	})
+	.use(connect.static(config.file.path, { maxAge: config.file.cache * 1000 }))
 );
 
 var io = require('socket.io').listen(server);
