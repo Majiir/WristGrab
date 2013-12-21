@@ -12,6 +12,17 @@ body {
 	margin-top: @navbarHeight + 1px;
 }
 
+a.brand {
+	text-transform: lowercase;
+}
+
+a.brand span.highlight {
+	background-color: lighten(@red, 5%);
+	margin: 0 (@baseLineHeight * 0.2);
+	padding: 0 (@baseLineHeight * 0.2);
+	.border-radius(@baseLineHeight * 0.2);
+}
+
 .row-fluid {
 	margin-bottom: @baseLineHeight;
 }
