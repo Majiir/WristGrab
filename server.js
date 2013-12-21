@@ -204,14 +204,18 @@ io.configure(function () {
  * Socket events.
  */
 
-function getSocketNickname(socket) {
-	var user = socket.handshake.session.user;
-	return user ? user.username : 'Guest';
+function connected(socket) {
+	return !socket.disconnected && !socket.disconnecting;
 }
 
-function updateList(disconnecting) {
+function getSocketNickname(socket) {
+	var user = socket.handshake.session.user;
+	return (user ? user.username : 'Guest') + (isLeader(socket) ? '*' : '');
+}
+
+function updateList() {
 	var list = io.sockets.clients()
-		.filter(function (socket) { return socket !== disconnecting; })
+		.filter(connected)
 		.map(getSocketNickname);
 	io.sockets.emit('list', list);
 }
@@ -227,15 +231,40 @@ function sendSocketUser(socket) {
 	socket.emit('user', user ? user.username : null);
 }
 
+function getLeader() {
+
+	function min(arr, compare) {
+		if (arr.length == 0) { return undefined; }
+		var lowest = arr[0];
+		for (var i = 1; i < arr.length; i++) {
+			if (compare(lowest, arr[i]) > 0) {
+				lowest = arr[i];
+			}
+		}
+		return lowest;
+	}
+
+	function getTime(socket) {
+		return Date.parse(socket.handshake.time).getTime();
+	}
+
+	return min(io.sockets.clients().filter(connected), function (a, b) {
+		return getTime(a) - getTime(b);
+	});
+
+}
+
+function isLeader(socket) {
+	return socket === getLeader();
+}
+
 io.sockets.on('connection', function (socket) {
 
 	updateList();
 	sendSocketUser(socket);
 
-	io.sockets.clients().forEach(function (sock) {
-		if (sock.handshake.address.address == '127.0.0.1') {
-			sock.emit('requestPlayList');
-		}
+	io.sockets.clients().filter(isLeader).forEach(function (sock) {
+		sock.emit('requestPlayList');
 	});
 
 	socket.on('update', function (status, time, videoId, loaded) {
@@ -245,14 +274,12 @@ io.sockets.on('connection', function (socket) {
 			'\tVideo: ' + videoId +
 			'\tLoaded: ' + loaded.toFixed(3)
 		);
-		if (socket.handshake.address.address == '127.0.0.1') {
+		if (isLeader(socket)) {
 			socket.broadcast.emit(status == states.PLAYING ? 'play' : 'pause', { timestamp: time, videoId: videoId });
 		} else {
 			if (status == states.PLAYING || status == states.CUED || status == states.UNSTARTED || status == states.ENDED) {
-				io.sockets.clients().forEach(function (sock) {
-					if (sock.handshake.address.address == '127.0.0.1') {
-						sock.emit('requestUpdate');
-					}
+				io.sockets.clients().filter(isLeader).forEach(function (sock) {
+					sock.emit('requestUpdate');
 				});
 			}
 		}
@@ -263,11 +290,12 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('disconnect', function() {
-		updateList(socket);
+		socket.disconnecting = true;
+		updateList();
 	});
 
 	socket.on('updatePlayList', function(list, index) {
-		if(socket.handshake.address.address == '127.0.0.1') {
+		if(isLeader(socket)) {
 			socket.broadcast.emit('refreshPlayList', list, index);
 		}
 	});
