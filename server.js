@@ -142,7 +142,16 @@ var server = http.createServer(connect()
 			updateSessionUser(req.session, null, function() {
 				res.status(204).send();
 			});
-		}
+		},
+		'GET /playlists': function (req, res, next) {
+			console.log('Got playlists for ' + req.session.user);
+			res.end();
+		},
+		'GET /playlists/:name': function (req, res, next, name) {
+			console.log('Got playlist "' + unescape(name) + '" for ' + req.session.user);
+			res.setHeader('Content-Type', 'text/plain; charset=utf8');
+			res.end(unescape(name));
+		},
 	}))
 	.use(lessMiddleware({
 		paths: [
